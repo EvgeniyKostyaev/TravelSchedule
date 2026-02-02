@@ -422,7 +422,7 @@ paths:
         "200":
           description: Успешный ответ
           content:
-            text/html; charset=utf-8:
+             text/html:
               schema:
                 $ref: '#/components/schemas/AllStationsResponse'
 components:
@@ -577,13 +577,6 @@ components:
               description: Код железнодорожной станции в системе ЕСР (если применимо)
         type_choices:
           $ref: '#/components/schemas/Schedule'
-    Schedule1:
-      type: object
-      properties:
-        desktop_url:
-          type: string
-        touch_url:
-          type: string
     Schedule:
       type: object
       properties:
