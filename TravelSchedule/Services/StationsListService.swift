@@ -28,13 +28,13 @@ final class StationsListService: StationsListServiceProtocol {
     func getAllStations() async throws -> AllStations {
         let response = try await client.getAllStations(query: .init(apikey: apikey))
         
-        let responseBody = try response.ok.body.html
-        
-        let limit = 35 * 1024 * 1024 // 35Mb
-        let fullData = try await Data(collecting: responseBody, upTo: limit)
-        
+        var fullData = Data()
+
+        for try await chunk in try response.ok.body.html {
+            fullData.append(contentsOf: chunk)
+        }
+
         let allStations = try JSONDecoder().decode(AllStations.self, from: fullData)
-        
         return allStations
     }
 }
