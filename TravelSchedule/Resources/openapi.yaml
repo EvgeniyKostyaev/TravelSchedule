@@ -422,9 +422,35 @@ paths:
         "200":
           description: Успешный ответ
           content:
-             text/html:
+            text/html:
               schema:
                 $ref: '#/components/schemas/AllStationsResponse'
+  /v3.0/copyright/:
+    get:
+      tags:
+        - getScheduleBannersData
+      summary: Данные о баннерах расписаний
+      operationId: getScheduleBannersData
+      parameters:
+        - name: apikey
+          in: query
+          description: API key
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: Формат ответа (json по умолчанию)
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleBannersData'
 components:
   schemas:
     Stations:
@@ -882,3 +908,34 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Station'
+    ScheduleBannersData:
+      type: object
+      properties:
+        copyright:
+          type: object
+          description: Данные о баннерах Яндекс Расписаний
+          properties:
+            logo_vm:
+              type: string
+              description: Вертикальный монохромный баннер
+            url:
+              type: string
+              description: URL Яндекс Расписаний
+            logo_vd:
+              type: string
+              description: Вертикальный черно-белый баннер
+            logo_hy:
+              type: string
+              description: Горизонтальный цветной баннер
+            logo_hd:
+              type: string
+              description: Горизонтальный черно-белый баннер
+            logo_vy:
+              type: string
+              description: Вертикальный цветной баннер
+            text:
+              type: string
+              description: Уведомительный текст
+            logo_hm:
+              type: string
+              description: Горизонтальный монохромный баннер

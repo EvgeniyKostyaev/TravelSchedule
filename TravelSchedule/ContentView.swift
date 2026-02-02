@@ -18,13 +18,14 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-//            testFetchStations()
-//            testFetchRouteSegmentSchedules()
-//            testFetchSchedule()
-//            testFetchThreadStations()
-//            testFetchNearestCity()
-//            testFetchCarrier()
+            testFetchStations()
+            testFetchRouteSegmentSchedules()
+            testFetchSchedule()
+            testFetchThreadStations()
+            testFetchNearestCity()
+            testFetchCarrier()
             testFetchAllStations()
+            testFetchScheduleBannersData()
         }
     }
     
@@ -194,6 +195,30 @@ struct ContentView: View {
                 let carrier = try await service.getAllStations()
                 
                 print("Successfully fetched: \(carrier)")
+            } catch {
+                
+                print("Error fetching: \(error)")
+            }
+        }
+    }
+    
+    private func testFetchScheduleBannersData() {
+        Task {
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                
+                let service = CopyrightService(
+                    client: client,
+                    apikey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
+                )
+                
+                print("Fetching...")
+                let scheduleBannersData = try await service.getScheduleBannersData()
+                
+                print("Successfully fetched: \(scheduleBannersData)")
             } catch {
                 
                 print("Error fetching: \(error)")
