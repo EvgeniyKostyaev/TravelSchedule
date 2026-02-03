@@ -5,24 +5,13 @@
 //  Created by Evgeniy Kostyaev on 02.02.2026.
 //
 
-import OpenAPIRuntime
-import OpenAPIURLSession
-
 typealias ScheduleBannersData = Components.Schemas.ScheduleBannersData
 
 protocol CopyrightServiceProtocol {
     func getScheduleBannersData() async throws -> ScheduleBannersData
 }
 
-final class CopyrightService: CopyrightServiceProtocol {
-    
-    private let client: Client
-    private let apikey: String
-    
-    init(client: Client, apikey: String) {
-        self.client = client
-        self.apikey = apikey
-    }
+final class CopyrightService: BaseService, CopyrightServiceProtocol {
     
     func getScheduleBannersData() async throws -> ScheduleBannersData {
         

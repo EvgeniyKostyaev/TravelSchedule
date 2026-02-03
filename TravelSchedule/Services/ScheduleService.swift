@@ -5,24 +5,13 @@
 //  Created by Evgeniy Kostyaev on 01.02.2026.
 //
 
-import OpenAPIRuntime
-import OpenAPIURLSession
-
 typealias Schedule = Components.Schemas.ScheduleResponse
 
 protocol ScheduleServiceProtocol {
     func getStationSchedule(station: String) async throws -> Schedule
 }
 
-final class ScheduleService: ScheduleServiceProtocol {
-    
-    private let client: Client
-    private let apikey: String
-    
-    init(client: Client, apikey: String) {
-        self.client = client
-        self.apikey = apikey
-    }
+final class ScheduleService: BaseService, ScheduleServiceProtocol {
     
     func getStationSchedule(station: String) async throws -> Schedule {
         

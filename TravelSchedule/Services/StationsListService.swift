@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import OpenAPIRuntime
-import OpenAPIURLSession
 
 typealias AllStations = Components.Schemas.AllStationsResponse
 
@@ -15,15 +13,7 @@ protocol StationsListServiceProtocol {
     func getAllStations() async throws -> AllStations
 }
 
-final class StationsListService: StationsListServiceProtocol {
-    
-    private let client: Client
-    private let apikey: String
-    
-    init(client: Client, apikey: String) {
-        self.client = client
-        self.apikey = apikey
-    }
+final class StationsListService: BaseService, StationsListServiceProtocol {
     
     func getAllStations() async throws -> AllStations {
         let response = try await client.getAllStations(query: .init(apikey: apikey))

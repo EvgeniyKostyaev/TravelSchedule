@@ -5,24 +5,13 @@
 //  Created by Evgeniy Kostyaev on 02.02.2026.
 //
 
-import OpenAPIRuntime
-import OpenAPIURLSession
-
 typealias NearestCity = Components.Schemas.NearestCityResponse
 
 protocol NearestSettlementServiceProtocol {
     func getNearestCity(lat: Double, lng: Double) async throws -> NearestCity
 }
 
-final class NearestSettlementService: NearestSettlementServiceProtocol {
-    
-    private let client: Client
-    private let apikey: String
-    
-    init(client: Client, apikey: String) {
-        self.client = client
-        self.apikey = apikey
-    }
+final class NearestSettlementService: BaseService, NearestSettlementServiceProtocol {
     
     func getNearestCity(lat: Double, lng: Double) async throws -> NearestCity {
         

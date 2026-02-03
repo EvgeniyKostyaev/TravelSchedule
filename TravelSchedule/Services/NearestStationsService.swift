@@ -5,24 +5,13 @@
 //  Created by Evgeniy Kostyaev on 30.01.2026.
 //
 
-import OpenAPIRuntime
-import OpenAPIURLSession
-
 typealias NearestStations = Components.Schemas.Stations
 
 protocol NearestStationsServiceProtocol {
     func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations
 }
 
-final class NearestStationsService: NearestStationsServiceProtocol {
-    
-    private let client: Client
-    private let apikey: String
-    
-    init(client: Client, apikey: String) {
-        self.client = client
-        self.apikey = apikey
-    }
+final class NearestStationsService: BaseService, NearestStationsServiceProtocol {
     
     func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations {
         

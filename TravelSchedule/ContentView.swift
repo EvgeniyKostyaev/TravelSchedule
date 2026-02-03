@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import OpenAPIURLSession
 
 struct ContentView: View {
     var body: some View {
@@ -33,15 +32,7 @@ struct ContentView: View {
     private func testFetchStations() {
         Task {
             do {
-                let client = Client(
-                    serverURL: try Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                
-                let service = NearestStationsService(
-                    client: client,
-                    apikey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
-                )
+                let service = NetworkClientFactory.shared.makeNearestStationsService()
                 
                 print("Fetching ...")
                 let stations = try await service.getNearestStations(
@@ -61,15 +52,7 @@ struct ContentView: View {
     private func testFetchRouteSegmentSchedules() {
         Task {
             do {
-                let client = Client(
-                    serverURL: try Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                
-                let service = SearchService(
-                    client: client,
-                    apikey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
-                )
+                let service = NetworkClientFactory.shared.makeSearchService()
                 
                 print("Fetching...")
                 let schedules = try await service.getScheduleBetweenStations(from: "s9600213", to: "c146")
@@ -85,15 +68,7 @@ struct ContentView: View {
     private func testFetchSchedule() {
         Task {
             do {
-                let client = Client(
-                    serverURL: try Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                
-                let service = ScheduleService(
-                    client: client,
-                    apikey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
-                )
+                let service = NetworkClientFactory.shared.makeScheduleService()
                 
                 print("Fetching...")
                 let schedule = try await service.getStationSchedule(station: "s9600213")
@@ -109,15 +84,7 @@ struct ContentView: View {
     private func testFetchThreadStations() {
         Task {
             do {
-                let client = Client(
-                    serverURL: try Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                
-                let service = ThreadService(
-                    client: client,
-                    apikey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
-                )
+                let service = NetworkClientFactory.shared.makeThreadService()
                 
                 print("Fetching...")
                 let threadStations = try await service.getRouteStations(uid: "038AA_tis")
@@ -133,15 +100,7 @@ struct ContentView: View {
     private func testFetchNearestCity() {
         Task {
             do {
-                let client = Client(
-                    serverURL: try Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                
-                let service = NearestSettlementService(
-                    client: client,
-                    apikey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
-                )
+                let service = NetworkClientFactory.shared.makeNearestSettlementService()
                 
                 print("Fetching...")
                 let nearestCity = try await service.getNearestCity(lat: 59.864177, lng: 30.319163)
@@ -157,15 +116,7 @@ struct ContentView: View {
     private func testFetchCarrier() {
         Task {
             do {
-                let client = Client(
-                    serverURL: try Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                
-                let service = CarrierService(
-                    client: client,
-                    apikey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
-                )
+                let service = NetworkClientFactory.shared.makeCarrierService()
                 
                 print("Fetching...")
                 let carrier = try await service.getCarrierInfo(code: "TK", system: "iata", lang: "ru_RU", format: "json")
@@ -181,15 +132,7 @@ struct ContentView: View {
     private func testFetchAllStations() {
         Task {
             do {
-                let client = Client(
-                    serverURL: try Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                
-                let service = StationsListService(
-                    client: client,
-                    apikey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
-                )
+                let service = NetworkClientFactory.shared.makeStationsListService()
                 
                 print("Fetching...")
                 let carrier = try await service.getAllStations()
@@ -205,15 +148,7 @@ struct ContentView: View {
     private func testFetchScheduleBannersData() {
         Task {
             do {
-                let client = Client(
-                    serverURL: try Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                
-                let service = CopyrightService(
-                    client: client,
-                    apikey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
-                )
+                let service = NetworkClientFactory.shared.makeCopyrightService()
                 
                 print("Fetching...")
                 let scheduleBannersData = try await service.getScheduleBannersData()
