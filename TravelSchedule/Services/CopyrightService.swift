@@ -15,9 +15,7 @@ final class CopyrightService: BaseService, CopyrightServiceProtocol {
     
     func getScheduleBannersData() async throws -> ScheduleBannersData {
         
-        let response = try await client.getScheduleBannersData(query: .init(
-            apikey: apikey
-        ))
+        let response = try await client.getScheduleBannersData(query: .init())
         
         return try response.ok.body.json
     }

@@ -16,7 +16,7 @@ protocol StationsListServiceProtocol {
 final class StationsListService: BaseService, StationsListServiceProtocol {
     
     func getAllStations() async throws -> AllStations {
-        let response = try await client.getAllStations(query: .init(apikey: apikey))
+        let response = try await client.getAllStations(query: .init())
         
         var fullData = Data()
 

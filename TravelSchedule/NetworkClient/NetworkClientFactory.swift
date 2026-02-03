@@ -12,45 +12,46 @@ final class NetworkClientFactory {
     static let shared = NetworkClientFactory()
     
     let client: Client
-    let apikey: String
     
     private init() {
+        let middleware = APIKeyMiddleware(apiKey: "11ee95a9-5d01-48d4-a612-52ffa3472cc6")
+        
         self.client = Client(
             serverURL: try! Servers.Server1.url(),
-            transport: URLSessionTransport()
+            transport: URLSessionTransport(),
+            middlewares: [middleware]
         )
-        self.apikey = "11ee95a9-5d01-48d4-a612-52ffa3472cc6"
     }
     
     func makeCarrierService() -> CarrierServiceProtocol {
-        CarrierService(client: client, apikey: apikey)
+        CarrierService(client: client)
     }
     
     func makeCopyrightService() -> CopyrightServiceProtocol {
-        CopyrightService(client: client, apikey: apikey)
+        CopyrightService(client: client)
     }
     
     func makeNearestSettlementService() -> NearestSettlementServiceProtocol {
-        NearestSettlementService(client: client, apikey: apikey)
+        NearestSettlementService(client: client)
     }
     
     func makeNearestStationsService() -> NearestStationsServiceProtocol {
-        NearestStationsService(client: client, apikey: apikey)
+        NearestStationsService(client: client)
     }
     
     func makeScheduleService() -> ScheduleServiceProtocol {
-        ScheduleService(client: client, apikey: apikey)
+        ScheduleService(client: client)
     }
     
     func makeSearchService() -> SearchServiceProtocol {
-        SearchService(client: client, apikey: apikey)
+        SearchService(client: client)
     }
     
     func makeStationsListService() -> StationsListServiceProtocol {
-        StationsListService(client: client, apikey: apikey)
+        StationsListService(client: client)
     }
     
     func makeThreadService() -> ThreadServiceProtocol {
-        ThreadService(client: client, apikey: apikey)
+        ThreadService(client: client)
     }
 }

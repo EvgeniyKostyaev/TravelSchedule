@@ -16,7 +16,6 @@ final class SearchService: BaseService, SearchServiceProtocol {
     func getScheduleBetweenStations(from: String, to: String) async throws -> RouteSegmentSchedules {
         
         let response = try await client.getScheduleBetweenStations(query: .init(
-            apikey: apikey,
             from: from,
             to: to
         ))

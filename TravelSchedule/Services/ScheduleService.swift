@@ -15,10 +15,7 @@ final class ScheduleService: BaseService, ScheduleServiceProtocol {
     
     func getStationSchedule(station: String) async throws -> Schedule {
         
-        let response = try await client.getStationSchedule(query: .init(
-            apikey: apikey,
-            station: station
-        ))
+        let response = try await client.getStationSchedule(query: .init(station: station))
         
         return try response.ok.body.json
     }

@@ -7,10 +7,8 @@
 
 class BaseService {
     let client: Client
-    let apikey: String
     
-    init(client: Client, apikey: String) {
+    init(client: Client) {
         self.client = client
-        self.apikey = apikey
     }
 }

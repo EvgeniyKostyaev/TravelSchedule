@@ -15,7 +15,6 @@ final class CarrierService: BaseService, CarrierServiceProtocol {
     
     func getCarrierInfo(code: String, system: String, lang: String, format: String) async throws -> Carrier {
         let response = try await client.getCarrierInfo(query: .init(
-            apikey: apikey,
             code: code,
             system: system,
             lang: lang,
