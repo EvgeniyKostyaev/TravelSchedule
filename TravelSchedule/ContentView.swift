@@ -9,16 +9,25 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-                .foregroundStyle(Color(.customRed))
-        }
-        .padding()
-        .onAppear {
-            
+        TabView {
+            NavigationStack {
+                Text("Schedule")
+            }
+            .tabItem {
+                Label {
+                    
+                } icon: {
+                    Image(.scheduleTab)
+                }
+            }
+            Text("Settings")
+                .tabItem {
+                    Label {
+                        
+                    } icon: {
+                        Image(.settingsTab)
+                    }
+                }
         }
     }
     
