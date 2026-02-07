@@ -7,29 +7,90 @@
 
 import SwiftUI
 
+enum Tab: Int {
+    case schedule
+    case settings
+}
+
 struct ContentView: View {
+    @State private var selectedTab: Tab = .schedule
+    
     var body: some View {
-        TabView {
-            NavigationStack {
-                Text("Schedule")
-            }
-            .tabItem {
-                Label {
-                    
-                } icon: {
-                    Image(.scheduleTab)
+        ZStack(alignment: .bottom) {
+            // Контент
+            Group {
+                switch selectedTab {
+                case .schedule:
+                    ScheduleView()
+                case .settings:
+                    SettingsView()
                 }
             }
-            Text("Settings")
-                .tabItem {
-                    Label {
-                        
-                    } icon: {
-                        Image(.settingsTab)
-                    }
-                }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            // Таббар
+            BottomTabBar(selectedTab: $selectedTab)
+        }
+        .ignoresSafeArea(.keyboard)
+    }
+    
+    struct ScheduleView: View {
+        var body: some View {
+            Color.blue.opacity(0.1)
+                .overlay(Text("Shedule"))
         }
     }
+    
+    struct SettingsView: View {
+        var body: some View {
+            Color.green.opacity(0.1)
+                .overlay(Text("Settings"))
+        }
+    }
+    
+    struct BottomTabBar: View {
+        @Binding var selectedTab: Tab
+        
+        var body: some View {
+            HStack {
+                tabButton(
+                    image: Image(.scheduleTab),
+                    tab: .schedule
+                )
+                
+                Spacer()
+                
+                tabButton(
+                    image: Image(.settingsTab),
+                    tab: .settings
+                )
+            }
+            .padding(.horizontal, 32)
+            .padding(.top, 12)
+            .padding(.bottom, 8)
+            .background(
+                Color(.systemBackground)
+                    .shadow(color: .black.opacity(0.05), radius: 8, y: -2)
+            )
+        }
+        
+        private func tabButton(image: Image, tab: Tab) -> some View {
+            Button {
+                withAnimation(.easeInOut) {
+                    selectedTab = tab
+                }
+            } label: {
+                image
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundColor(
+                        selectedTab == tab ? .customBlack : .customGray
+                    )
+                    .frame(width: 30, height: 30)
+            }
+            .frame(width: 75, height: 49)
+        }
+    }
+    
     
     // MARK: - Helper methods
     private func testFetchStations() {
