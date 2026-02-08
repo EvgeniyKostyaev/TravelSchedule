@@ -17,7 +17,8 @@ struct ContentView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Контент
+            Color.customWhite
+                .ignoresSafeArea(edges: .bottom)
             Group {
                 switch selectedTab {
                 case .schedule:
@@ -28,7 +29,6 @@ struct ContentView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            // Таббар
             BottomTabBar(selectedTab: $selectedTab)
         }
         .ignoresSafeArea(.keyboard)
@@ -36,14 +36,14 @@ struct ContentView: View {
     
     struct ScheduleView: View {
         var body: some View {
-            Color.blue.opacity(0.1)
+            Color.customWhite.opacity(0.1)
                 .overlay(Text("Shedule"))
         }
     }
     
     struct SettingsView: View {
         var body: some View {
-            Color.green.opacity(0.1)
+            Color.customWhite.opacity(0.1)
                 .overlay(Text("Settings"))
         }
     }
@@ -52,24 +52,26 @@ struct ContentView: View {
         @Binding var selectedTab: Tab
         
         var body: some View {
-            HStack {
-                tabButton(
-                    image: Image(.scheduleTab),
-                    tab: .schedule
-                )
-                
-                Spacer()
-                
-                tabButton(
-                    image: Image(.settingsTab),
-                    tab: .settings
-                )
+            VStack(spacing: 0) {
+                Divider()
+                HStack {
+                    tabButton(
+                        image: Image(.scheduleTab),
+                        tab: .schedule
+                    )
+                    
+                    Spacer()
+                    
+                    tabButton(
+                        image: Image(.settingsTab),
+                        tab: .settings
+                    )
+                }
+                .padding(.horizontal, 56)
             }
-            .padding(.horizontal, 32)
-            .padding(.top, 12)
-            .padding(.bottom, 8)
+            
             .background(
-                Color(.systemBackground)
+                Color.customWhite
                     .shadow(color: .black.opacity(0.05), radius: 8, y: -2)
             )
         }
@@ -81,7 +83,6 @@ struct ContentView: View {
                 }
             } label: {
                 image
-                    .font(.system(size: 22, weight: .semibold))
                     .foregroundColor(
                         selectedTab == tab ? .customBlack : .customGray
                     )
