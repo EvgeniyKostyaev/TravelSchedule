@@ -35,9 +35,48 @@ struct ContentView: View {
     }
     
     struct ScheduleView: View {
+        @State private var fromText: String = ""
+        @State private var toText: String = ""
+        
         var body: some View {
-            Color.customWhite.opacity(0.1)
-                .overlay(Text("Shedule"))
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        TextField("Откуда", text: $fromText)
+                        TextField("Куда", text: $toText)
+                    }
+                    .font(.system(size: 16))
+                    .foregroundStyle(Color.customWhite)
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.white)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    )
+                    
+                    Button {
+                        let temp = fromText
+                        fromText = toText
+                        toText = temp
+                    } label: {
+                        Image(.swapButton)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(Color.customBlue)
+                            .frame(width: 36, height: 36)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                    }
+                }
+                .padding(16)
+                .background(Color.customBlue)
+                .clipShape(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                )
+                
+                Spacer()
+            }
+            .padding(16)
         }
     }
     
