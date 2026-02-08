@@ -83,7 +83,8 @@ struct ContentView: View {
                 }
             } label: {
                 image
-                    .foregroundColor(
+                    .renderingMode(.template)
+                    .foregroundStyle(
                         selectedTab == tab ? .customBlack : .customGray
                     )
                     .frame(width: 30, height: 30)
