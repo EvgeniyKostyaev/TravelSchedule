@@ -35,24 +35,60 @@ struct ContentView: View {
     }
     
     struct ScheduleView: View {
+        private enum Layout {
+            static let headerSpacing: CGFloat = 16
+            static let carouselSpacing: CGFloat = 16
+            static let carouselHeight: CGFloat = 144
+            static let carouselContainerHeight: CGFloat = 188
+            static let cardSpacing: CGFloat = 16
+            static let textFieldSpacing: CGFloat = 12
+            static let textFieldFontSize: CGFloat = 17
+            static let textFieldVerticalPadding: CGFloat = 14
+            static let textFieldHorizontalPadding: CGFloat = 16
+            static let textFieldCornerRadius: CGFloat = 20
+            static let swapIconSize: CGFloat = 16
+            static let swapButtonSize: CGFloat = 36
+            static let cardPadding: CGFloat = 16
+            static let cardCornerRadius: CGFloat = 20
+            static let screenPadding: CGFloat = 16
+        }
+        
         @State private var fromText: String = ""
         @State private var toText: String = ""
         
         var body: some View {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack(spacing: 16) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        TextField("Откуда", text: $fromText)
-                        TextField("Куда", text: $toText)
+            VStack(alignment: .leading, spacing: Layout.headerSpacing) {
+                ZStack() {
+                    LazyHStack(spacing: Layout.carouselSpacing) {
+                        
                     }
-                    .font(.system(size: 16))
-                    .foregroundStyle(Color.customWhite)
-                    .padding(.vertical, 14)
-                    .padding(.horizontal, 16)
+                    .frame(height: Layout.carouselHeight)
+                }
+                .frame(height: Layout.carouselContainerHeight)
+                
+                HStack(spacing: Layout.cardSpacing) {
+                    VStack(alignment: .leading, spacing: Layout.textFieldSpacing) {
+                        TextField(
+                            String(),
+                            text: $fromText,
+                            prompt: Text("Откуда").foregroundStyle(Color.customGray)
+                        )
+                        .foregroundStyle(Color.black)
+                        
+                        TextField(
+                            String(),
+                            text: $toText,
+                            prompt: Text("Куда").foregroundStyle(Color.customGray)
+                        )
+                        .foregroundStyle(Color.black)
+                    }
+                    .font(.system(size: Layout.textFieldFontSize, weight: .regular))
+                    .padding(.vertical, Layout.textFieldVerticalPadding)
+                    .padding(.horizontal, Layout.textFieldHorizontalPadding)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color.white)
                     .clipShape(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        RoundedRectangle(cornerRadius: Layout.textFieldCornerRadius, style: .continuous)
                     )
                     
                     Button {
@@ -61,22 +97,22 @@ struct ContentView: View {
                         toText = temp
                     } label: {
                         Image(.swapButton)
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.system(size: Layout.swapIconSize, weight: .semibold))
                             .foregroundStyle(Color.customBlue)
-                            .frame(width: 36, height: 36)
+                            .frame(width: Layout.swapButtonSize, height: Layout.swapButtonSize)
                             .background(Color.white)
                             .clipShape(Circle())
                     }
                 }
-                .padding(16)
+                .padding(Layout.cardPadding)
                 .background(Color.customBlue)
                 .clipShape(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous)
                 )
                 
                 Spacer()
             }
-            .padding(16)
+            .padding(Layout.screenPadding)
         }
     }
     
@@ -88,10 +124,18 @@ struct ContentView: View {
     }
     
     struct BottomTabBar: View {
+        private enum Layout {
+            static let containerSpacing: CGFloat = 0
+            static let horizontalPadding: CGFloat = 56
+            static let iconSize: CGFloat = 30
+            static let buttonWidth: CGFloat = 75
+            static let buttonHeight: CGFloat = 49
+        }
+        
         @Binding var selectedTab: Tab
         
         var body: some View {
-            VStack(spacing: 0) {
+            VStack(spacing: Layout.containerSpacing) {
                 Divider()
                 HStack {
                     tabButton(
@@ -106,13 +150,8 @@ struct ContentView: View {
                         tab: .settings
                     )
                 }
-                .padding(.horizontal, 56)
+                .padding(.horizontal, Layout.horizontalPadding)
             }
-            
-            .background(
-                Color.customWhite
-                    .shadow(color: .black.opacity(0.05), radius: 8, y: -2)
-            )
         }
         
         private func tabButton(image: Image, tab: Tab) -> some View {
@@ -126,9 +165,9 @@ struct ContentView: View {
                     .foregroundStyle(
                         selectedTab == tab ? .customBlack : .customGray
                     )
-                    .frame(width: 30, height: 30)
+                    .frame(width: Layout.iconSize, height: Layout.iconSize)
             }
-            .frame(width: 75, height: 49)
+            .frame(width: Layout.buttonWidth, height: Layout.buttonHeight)
         }
     }
     
