@@ -35,20 +35,6 @@ struct CitiesListView: View {
         "Горный воздух",
         "Краснодар",
         "Казань",
-        "Омск",
-        "Москва",
-        "Санкт Петербург",
-        "Сочи",
-        "Горный воздух",
-        "Краснодар",
-        "Казань",
-        "Омск",
-        "Москва",
-        "Санкт Петербург",
-        "Сочи",
-        "Горный воздух",
-        "Краснодар",
-        "Казань",
         "Омск"
     ]
     
@@ -151,8 +137,6 @@ struct CitiesListView: View {
                                     .font(.system(size: Layout.rowChevronSize, weight: .semibold))
                                     .foregroundStyle(Color.customBlack)
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
                         }
                     }
                     .listRowSeparator(.hidden)
