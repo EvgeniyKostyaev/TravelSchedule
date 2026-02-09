@@ -14,7 +14,7 @@ enum Tab: Int {
 
 struct ContentView: View {
     @State private var selectedTab: Tab = .schedule
-    @State private var isCitiesPresented: Bool = false
+    @State private var schedulePath = NavigationPath()
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -23,14 +23,14 @@ struct ContentView: View {
             Group {
                 switch selectedTab {
                 case .schedule:
-                    ScheduleView(isCitiesPresented: $isCitiesPresented)
+                    ScheduleView(path: $schedulePath)
                 case .settings:
                     SettingsView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            if !isCitiesPresented {
+            if schedulePath.isEmpty {
                 BottomTabBar(selectedTab: $selectedTab)
             }
         }
@@ -38,7 +38,11 @@ struct ContentView: View {
     }
     
     struct ScheduleView: View {
-        private enum ActiveField: String, Identifiable {
+        enum Route: Hashable {
+            case cities(ActiveField)
+        }
+        
+        enum ActiveField: String, Identifiable {
             case from
             case to
             
@@ -63,13 +67,12 @@ struct ContentView: View {
             static let screenPadding: CGFloat = 16
         }
         
-        @Binding var isCitiesPresented: Bool
+        @Binding var path: NavigationPath
         @State private var fromText: String = String()
         @State private var toText: String = String()
-        @State private var activeField: ActiveField?
         
         var body: some View {
-            NavigationStack {
+            NavigationStack(path: $path) {
                 VStack(alignment: .leading, spacing: Layout.headerSpacing) {
                     ZStack() {
                         LazyHStack(spacing: Layout.carouselSpacing) {
@@ -82,7 +85,7 @@ struct ContentView: View {
                     HStack(spacing: Layout.cardSpacing) {
                         VStack(alignment: .leading, spacing: Layout.textFieldSpacing) {
                             Button {
-                                activeField = .from
+                                path.append(Route.cities(.from))
                             } label: {
                                 Text(fromText.isEmpty ? "Откуда" : fromText)
                                     .foregroundStyle(fromText.isEmpty ? Color.customGray : .black)
@@ -90,7 +93,7 @@ struct ContentView: View {
                             }
                             
                             Button {
-                                activeField = .to
+                                path.append(Route.cities(.to))
                             } label: {
                                 Text(toText.isEmpty ? "Куда" : toText)
                                     .foregroundStyle(toText.isEmpty ? Color.customGray : .black)
@@ -128,20 +131,22 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding(Layout.screenPadding)
-                .navigationDestination(item: $activeField) { field in
-                    CitiesListView { city in
-                        switch field {
-                        case .from:
-                            fromText = city
-                        case .to:
-                            toText = city
+                .navigationDestination(for: Route.self) { route in
+                    switch route {
+                    case .cities(let field):
+                        CitiesListView { city in
+                            switch field {
+                            case .from:
+                                fromText = city
+                            case .to:
+                                toText = city
+                            }
+                            if !path.isEmpty {
+                                path.removeLast()
+                            }
                         }
-                        activeField = nil
                     }
                 }
-            }
-            .onChange(of: activeField) { _, newValue in
-                isCitiesPresented = newValue != nil
             }
         }
     }
