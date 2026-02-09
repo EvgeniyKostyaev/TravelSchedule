@@ -151,16 +151,9 @@ struct CitiesListView: View {
                                     .font(.system(size: Layout.rowChevronSize, weight: .semibold))
                                     .foregroundStyle(Color.customBlack)
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .contentShape(Rectangle())
                         }
-                        .buttonStyle(.plain)
-                        .listRowInsets(
-                            EdgeInsets(
-                                top: Layout.rowSpacing / 2,
-                                leading: Layout.horizontalPadding,
-                                bottom: Layout.rowSpacing / 2,
-                                trailing: Layout.horizontalPadding
-                            )
-                        )
                     }
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.customWhite)
