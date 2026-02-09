@@ -40,6 +40,7 @@ struct ContentView: View {
     struct ScheduleView: View {
         enum Route: Hashable {
             case cities(ActiveField)
+            case stations(ActiveField, String)
         }
         
         enum ActiveField: String, Identifiable {
@@ -135,15 +136,18 @@ struct ContentView: View {
                     switch route {
                     case .cities(let field):
                         CitiesListView { city in
+                            path.append(Route.stations(field, city))
+                        }
+                    case .stations(let field, let city):
+                        StationsListView(city: city) { station in
+                            let value = "\(city) (\(station))"
                             switch field {
                             case .from:
-                                fromText = city
+                                fromText = value
                             case .to:
-                                toText = city
+                                toText = value
                             }
-                            if !path.isEmpty {
-                                path.removeLast()
-                            }
+                            path = NavigationPath()
                         }
                     }
                 }
