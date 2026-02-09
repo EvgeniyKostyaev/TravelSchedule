@@ -35,6 +35,13 @@ struct ContentView: View {
     }
     
     struct ScheduleView: View {
+        private enum ActiveField: String, Identifiable {
+            case from
+            case to
+            
+            var id: String { rawValue }
+        }
+        
         private enum Layout {
             static let headerSpacing: CGFloat = 16
             static let carouselSpacing: CGFloat = 16
@@ -53,10 +60,9 @@ struct ContentView: View {
             static let screenPadding: CGFloat = 16
         }
         
-        @State private var fromText: String = ""
-        @State private var toText: String = ""
-        
-        @State private var showCitiesListView: Bool = false
+        @State private var fromText: String = String()
+        @State private var toText: String = String()
+        @State private var activeField: ActiveField?
         
         var body: some View {
             NavigationStack {
@@ -71,16 +77,16 @@ struct ContentView: View {
                     
                     HStack(spacing: Layout.cardSpacing) {
                         VStack(alignment: .leading, spacing: Layout.textFieldSpacing) {
-                            Button() {
-                                showCitiesListView = true
+                            Button {
+                                activeField = .from
                             } label: {
                                 Text(fromText.isEmpty ? "Откуда" : fromText)
                                     .foregroundStyle(fromText.isEmpty ? Color.customGray : .black)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             
-                            Button() {
-                                showCitiesListView = true
+                            Button {
+                                activeField = .to
                             } label: {
                                 Text(toText.isEmpty ? "Куда" : toText)
                                     .foregroundStyle(toText.isEmpty ? Color.customGray : .black)
@@ -118,8 +124,16 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding(Layout.screenPadding)
-                .navigationDestination(isPresented: $showCitiesListView) {
-                    CitiesListView()
+            }
+            .fullScreenCover(item: $activeField) { field in
+                CitiesListView { city in
+                    switch field {
+                    case .from:
+                        fromText = city
+                    case .to:
+                        toText = city
+                    }
+                    activeField = nil
                 }
             }
         }

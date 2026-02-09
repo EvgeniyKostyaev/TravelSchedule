@@ -25,6 +25,8 @@ struct CitiesListView: View {
     }
     
     @State private var query: String = ""
+    @Environment(\.dismiss) private var dismiss
+    private let onSelect: (String) -> Void
     
     private let cities: [String] = [
         "Москва",
@@ -60,8 +62,36 @@ struct CitiesListView: View {
         }
     }
     
+    init(onSelect: @escaping (String) -> Void = { _ in }) {
+        self.onSelect = onSelect
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: Layout.backButtonSize, weight: .semibold))
+                        .foregroundStyle(Color.customBlack)
+                        .frame(width: Layout.backButtonSize, height: Layout.backButtonSize)
+                }
+                
+                Spacer()
+                
+                Text("Выбор города")
+                    .font(.system(size: Layout.titleFontSize, weight: .semibold))
+                    .foregroundStyle(Color.customBlack)
+                
+                Spacer()
+                
+                Color.clear
+                    .frame(width: Layout.backButtonSize, height: Layout.backButtonSize)
+            }
+            .padding(.horizontal, Layout.horizontalPadding)
+            .padding(.top, Layout.topPadding)
+            
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: Layout.searchIconSize, weight: .regular))
@@ -106,17 +136,23 @@ struct CitiesListView: View {
             } else {
                 List {
                     ForEach(filteredCities, id: \.self) { city in
-                        HStack {
-                            Text(city)
-                                .font(.system(size: 17, weight: .regular))
-                                .foregroundStyle(Color.customBlack)
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.right")
-                                .font(.system(size: Layout.rowChevronSize, weight: .semibold))
-                                .foregroundStyle(Color.customBlack)
+                        Button {
+                            onSelect(city)
+                            dismiss()
+                        } label: {
+                            HStack {
+                                Text(city)
+                                    .font(.system(size: 17, weight: .regular))
+                                    .foregroundStyle(Color.customBlack)
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: Layout.rowChevronSize, weight: .semibold))
+                                    .foregroundStyle(Color.customBlack)
+                            }
                         }
+                        .buttonStyle(.plain)
                         .listRowInsets(
                             EdgeInsets(
                                 top: Layout.rowSpacing / 2,
