@@ -56,9 +56,7 @@ struct ContentView: View {
             static let carouselHeight: CGFloat = 144
             static let carouselContainerHeight: CGFloat = 188
             static let cardSpacing: CGFloat = 16
-            static let textFieldSpacing: CGFloat = 12
             static let textFieldFontSize: CGFloat = 17
-            static let textFieldVerticalPadding: CGFloat = 14
             static let textFieldHorizontalPadding: CGFloat = 16
             static let textFieldCornerRadius: CGFloat = 20
             static let swapIconSize: CGFloat = 16
