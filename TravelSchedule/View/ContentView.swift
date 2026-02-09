@@ -56,63 +56,72 @@ struct ContentView: View {
         @State private var fromText: String = ""
         @State private var toText: String = ""
         
+        @State private var showCitiesListView: Bool = false
+        
         var body: some View {
-            VStack(alignment: .leading, spacing: Layout.headerSpacing) {
-                ZStack() {
-                    LazyHStack(spacing: Layout.carouselSpacing) {
-                        
+            NavigationStack {
+                VStack(alignment: .leading, spacing: Layout.headerSpacing) {
+                    ZStack() {
+                        LazyHStack(spacing: Layout.carouselSpacing) {
+                            
+                        }
+                        .frame(height: Layout.carouselHeight)
                     }
-                    .frame(height: Layout.carouselHeight)
-                }
-                .frame(height: Layout.carouselContainerHeight)
-                
-                HStack(spacing: Layout.cardSpacing) {
-                    VStack(alignment: .leading, spacing: Layout.textFieldSpacing) {
-                        TextField(
-                            String(),
-                            text: $fromText,
-                            prompt: Text("Откуда").foregroundStyle(Color.customGray)
+                    .frame(height: Layout.carouselContainerHeight)
+                    
+                    HStack(spacing: Layout.cardSpacing) {
+                        VStack(alignment: .leading, spacing: Layout.textFieldSpacing) {
+                            Button() {
+                                showCitiesListView = true
+                            } label: {
+                                Text(fromText.isEmpty ? "Откуда" : fromText)
+                                    .foregroundStyle(fromText.isEmpty ? Color.customGray : .black)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            
+                            Button() {
+                                showCitiesListView = true
+                            } label: {
+                                Text(toText.isEmpty ? "Куда" : toText)
+                                    .foregroundStyle(toText.isEmpty ? Color.customGray : .black)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                        .font(.system(size: Layout.textFieldFontSize, weight: .regular))
+                        .padding(.vertical, Layout.textFieldVerticalPadding)
+                        .padding(.horizontal, Layout.textFieldHorizontalPadding)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
+                        .clipShape(
+                            RoundedRectangle(cornerRadius: Layout.textFieldCornerRadius, style: .continuous)
                         )
-                        .foregroundStyle(Color.black)
                         
-                        TextField(
-                            String(),
-                            text: $toText,
-                            prompt: Text("Куда").foregroundStyle(Color.customGray)
-                        )
-                        .foregroundStyle(Color.black)
+                        Button {
+                            let temp = fromText
+                            fromText = toText
+                            toText = temp
+                        } label: {
+                            Image(.swapButton)
+                                .font(.system(size: Layout.swapIconSize, weight: .semibold))
+                                .foregroundStyle(Color.customBlue)
+                                .frame(width: Layout.swapButtonSize, height: Layout.swapButtonSize)
+                                .background(Color.white)
+                                .clipShape(Circle())
+                        }
                     }
-                    .font(.system(size: Layout.textFieldFontSize, weight: .regular))
-                    .padding(.vertical, Layout.textFieldVerticalPadding)
-                    .padding(.horizontal, Layout.textFieldHorizontalPadding)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.white)
+                    .padding(Layout.cardPadding)
+                    .background(Color.customBlue)
                     .clipShape(
-                        RoundedRectangle(cornerRadius: Layout.textFieldCornerRadius, style: .continuous)
+                        RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous)
                     )
                     
-                    Button {
-                        let temp = fromText
-                        fromText = toText
-                        toText = temp
-                    } label: {
-                        Image(.swapButton)
-                            .font(.system(size: Layout.swapIconSize, weight: .semibold))
-                            .foregroundStyle(Color.customBlue)
-                            .frame(width: Layout.swapButtonSize, height: Layout.swapButtonSize)
-                            .background(Color.white)
-                            .clipShape(Circle())
-                    }
+                    Spacer()
                 }
-                .padding(Layout.cardPadding)
-                .background(Color.customBlue)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous)
-                )
-                
-                Spacer()
+                .padding(Layout.screenPadding)
+                .navigationDestination(isPresented: $showCitiesListView) {
+                    CitiesListView()
+                }
             }
-            .padding(Layout.screenPadding)
         }
     }
     
