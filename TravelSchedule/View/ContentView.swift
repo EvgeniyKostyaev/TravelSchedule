@@ -84,7 +84,7 @@ struct ContentView: View {
                     .frame(height: Layout.carouselContainerHeight)
                     
                     HStack(spacing: Layout.cardSpacing) {
-                        VStack(alignment: .leading, spacing: Layout.textFieldSpacing) {
+                        VStack(alignment: .leading, spacing: 0) {
                             Button {
                                 path.append(Route.cities(.from))
                             } label: {
@@ -92,6 +92,7 @@ struct ContentView: View {
                                     .foregroundStyle(fromText.isEmpty ? Color.customGray : .black)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
+                            .frame(height: 48)
                             
                             Button {
                                 path.append(Route.cities(.to))
@@ -100,9 +101,10 @@ struct ContentView: View {
                                     .foregroundStyle(toText.isEmpty ? Color.customGray : .black)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
+                            .frame(height: 48)
                         }
                         .font(.system(size: Layout.textFieldFontSize, weight: .regular))
-                        .padding(.vertical, Layout.textFieldVerticalPadding)
+                        
                         .padding(.horizontal, Layout.textFieldHorizontalPadding)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color.white)
