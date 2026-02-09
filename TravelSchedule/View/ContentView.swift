@@ -14,6 +14,7 @@ enum Tab: Int {
 
 struct ContentView: View {
     @State private var selectedTab: Tab = .schedule
+    @State private var isCitiesPresented: Bool = false
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -22,14 +23,16 @@ struct ContentView: View {
             Group {
                 switch selectedTab {
                 case .schedule:
-                    ScheduleView()
+                    ScheduleView(isCitiesPresented: $isCitiesPresented)
                 case .settings:
                     SettingsView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            BottomTabBar(selectedTab: $selectedTab)
+            if !isCitiesPresented {
+                BottomTabBar(selectedTab: $selectedTab)
+            }
         }
         .ignoresSafeArea(.keyboard)
     }
@@ -60,6 +63,7 @@ struct ContentView: View {
             static let screenPadding: CGFloat = 16
         }
         
+        @Binding var isCitiesPresented: Bool
         @State private var fromText: String = String()
         @State private var toText: String = String()
         @State private var activeField: ActiveField?
@@ -124,17 +128,20 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding(Layout.screenPadding)
-            }
-            .fullScreenCover(item: $activeField) { field in
-                CitiesListView { city in
-                    switch field {
-                    case .from:
-                        fromText = city
-                    case .to:
-                        toText = city
+                .navigationDestination(item: $activeField) { field in
+                    CitiesListView { city in
+                        switch field {
+                        case .from:
+                            fromText = city
+                        case .to:
+                            toText = city
+                        }
+                        activeField = nil
                     }
-                    activeField = nil
                 }
+            }
+            .onChange(of: activeField) { _, newValue in
+                isCitiesPresented = newValue != nil
             }
         }
     }

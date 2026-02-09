@@ -25,7 +25,6 @@ struct CitiesListView: View {
     }
     
     @State private var query: String = ""
-    @Environment(\.dismiss) private var dismiss
     private let onSelect: (String) -> Void
     
     private let cities: [String] = [
@@ -54,30 +53,6 @@ struct CitiesListView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-            HStack {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: Layout.backButtonSize, weight: .semibold))
-                        .foregroundStyle(Color.customBlack)
-                        .frame(width: Layout.backButtonSize, height: Layout.backButtonSize)
-                }
-                
-                Spacer()
-                
-                Text("Выбор города")
-                    .font(.system(size: Layout.titleFontSize, weight: .semibold))
-                    .foregroundStyle(Color.customBlack)
-                
-                Spacer()
-                
-                Color.clear
-                    .frame(width: Layout.backButtonSize, height: Layout.backButtonSize)
-            }
-            .padding(.horizontal, Layout.horizontalPadding)
-            .padding(.top, Layout.topPadding)
-            
             HStack(spacing: 8) {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: Layout.searchIconSize, weight: .regular))
@@ -124,7 +99,6 @@ struct CitiesListView: View {
                     ForEach(filteredCities, id: \.self) { city in
                         Button {
                             onSelect(city)
-                            dismiss()
                         } label: {
                             HStack {
                                 Text(city)
@@ -148,6 +122,8 @@ struct CitiesListView: View {
             }
         }
         .background(Color.customWhite)
+        .navigationTitle("Выбор города")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
