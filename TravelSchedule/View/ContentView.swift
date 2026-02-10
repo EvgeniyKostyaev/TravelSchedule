@@ -17,8 +17,6 @@ struct ContentView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            Color.customWhite
-                .ignoresSafeArea(edges: .bottom)
             Group {
                 switch selectedTab {
                 case .schedule:

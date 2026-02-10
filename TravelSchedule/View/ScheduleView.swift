@@ -52,7 +52,8 @@ struct ScheduleView: View {
                         isCitiesPresenting = true
                     } label: {
                         Text(fromText.isEmpty ? "Откуда" : fromText)
-                            .foregroundStyle(fromText.isEmpty ? Color.customGray : .black)
+                            .foregroundStyle(fromText.isEmpty ? Color.customGray : .customBlack)
+                            .colorScheme(.light)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .frame(height: 48)
@@ -62,7 +63,8 @@ struct ScheduleView: View {
                         isCitiesPresenting = true
                     } label: {
                         Text(toText.isEmpty ? "Куда" : toText)
-                            .foregroundStyle(toText.isEmpty ? Color.customGray : .black)
+                            .foregroundStyle(toText.isEmpty ? Color.customGray : .customBlack)
+                            .colorScheme(.light)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .frame(height: 48)
@@ -70,7 +72,8 @@ struct ScheduleView: View {
                 .font(.system(size: Layout.textFieldFontSize, weight: .regular))
                 .padding(.horizontal, Layout.textFieldHorizontalPadding)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.white)
+                .background(Color.customWhite)
+                .colorScheme(.light)
                 .clipShape(
                     RoundedRectangle(cornerRadius: Layout.textFieldCornerRadius, style: .continuous)
                 )
@@ -84,7 +87,8 @@ struct ScheduleView: View {
                         .font(.system(size: Layout.swapIconSize, weight: .semibold))
                         .foregroundStyle(Color.customBlue)
                         .frame(width: Layout.swapButtonSize, height: Layout.swapButtonSize)
-                        .background(Color.white)
+                        .background(Color.customWhite)
+                        .colorScheme(.light)
                         .clipShape(Circle())
                 }
             }
@@ -103,6 +107,7 @@ struct ScheduleView: View {
                     } label: {
                         Text("Найти")
                             .foregroundStyle(.customWhite)
+                            .colorScheme(.light)
                             .font(.system(size: Layout.textFieldFontSize, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .center)
                     }

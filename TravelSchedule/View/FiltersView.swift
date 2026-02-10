@@ -36,7 +36,7 @@ struct FiltersView: View {
                 .padding(.horizontal, Layout.horizontalPadding)
             
             VStack(spacing: Layout.rowSpacing) {
-                ForEach(CarriersListView.TimeSlot.allCases) { slot in
+                ForEach(TimeSlot.allCases) { slot in
                     Button {
                         toggle(slot)
                     } label: {
@@ -87,7 +87,7 @@ struct FiltersView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
     
-    private func toggle(_ slot: CarriersListView.TimeSlot) {
+    private func toggle(_ slot: TimeSlot) {
         if filters.selectedSlots.contains(slot) {
             filters.selectedSlots.remove(slot)
         } else {
