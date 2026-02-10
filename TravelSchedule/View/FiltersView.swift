@@ -10,11 +10,11 @@ import SwiftUI
 struct FiltersView: View {
     private enum Layout {
         static let horizontalPadding: CGFloat = 16
-        static let sectionSpacing: CGFloat = 16
-        static let rowSpacing: CGFloat = 12
-        static let titleFontSize: CGFloat = 17
-        static let subtitleFontSize: CGFloat = 13
-        static let buttonHeight: CGFloat = 44
+        static let sectionSpacing: CGFloat = 35
+        static let rowSpacing: CGFloat = 30
+        static let titleFontSize: CGFloat = 24
+        static let subtitleFontSize: CGFloat = 17
+        static let buttonHeight: CGFloat = 60
         static let buttonCornerRadius: CGFloat = 12
         static let checkboxSize: CGFloat = 18
         static let radioSize: CGFloat = 18
@@ -31,9 +31,10 @@ struct FiltersView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
             Text("Время отправления")
-                .font(.system(size: Layout.titleFontSize, weight: .semibold))
+                .font(.system(size: Layout.titleFontSize, weight: .bold))
                 .foregroundStyle(Color.customBlack)
                 .padding(.horizontal, Layout.horizontalPadding)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack(spacing: Layout.rowSpacing) {
                 ForEach(TimeSlot.allCases) { slot in
@@ -73,18 +74,19 @@ struct FiltersView: View {
             Button {
                 onApply()
             } label: {
-                Text("Применить")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(Color.customWhite)
-                    .frame(maxWidth: .infinity, minHeight: Layout.buttonHeight)
+                HStack(spacing: 6) {
+                    Text("Применить")
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundStyle(Color.customWhite)
+                        .colorScheme(.light)
+                }
+                .frame(maxWidth: .infinity, minHeight: Layout.buttonHeight)
             }
             .background(Color.customBlue)
             .clipShape(RoundedRectangle(cornerRadius: Layout.buttonCornerRadius, style: .continuous))
             .padding(.horizontal, Layout.horizontalPadding)
-            .padding(.bottom, 12)
+            .padding(.bottom, Layout.horizontalPadding)
         }
-        .navigationTitle("Фильтрация")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     private func toggle(_ slot: TimeSlot) {
