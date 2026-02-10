@@ -14,7 +14,6 @@ enum Tab: Int {
 
 struct ContentView: View {
     @State private var selectedTab: Tab = .schedule
-    @State private var schedulePath = NavigationPath()
     
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -23,193 +22,17 @@ struct ContentView: View {
             Group {
                 switch selectedTab {
                 case .schedule:
-                    ScheduleView(path: $schedulePath)
+                    ScheduleView()
                 case .settings:
                     SettingsView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            if schedulePath.isEmpty {
-                BottomTabBar(selectedTab: $selectedTab)
-            }
+            BottomTabBarView(selectedTab: $selectedTab)
         }
         .ignoresSafeArea(.keyboard)
     }
-    
-    struct ScheduleView: View {
-        enum Route: Hashable {
-            case cities(ActiveField)
-            case stations(ActiveField, String)
-        }
-        
-        enum ActiveField: String, Identifiable {
-            case from
-            case to
-            
-            var id: String { rawValue }
-        }
-        
-        private enum Layout {
-            static let headerSpacing: CGFloat = 16
-            static let carouselSpacing: CGFloat = 16
-            static let carouselHeight: CGFloat = 144
-            static let carouselContainerHeight: CGFloat = 188
-            static let cardSpacing: CGFloat = 16
-            static let textFieldFontSize: CGFloat = 17
-            static let textFieldHorizontalPadding: CGFloat = 16
-            static let textFieldCornerRadius: CGFloat = 20
-            static let swapIconSize: CGFloat = 16
-            static let swapButtonSize: CGFloat = 36
-            static let cardPadding: CGFloat = 16
-            static let cardCornerRadius: CGFloat = 20
-            static let screenPadding: CGFloat = 16
-        }
-        
-        @Binding var path: NavigationPath
-        @State private var fromText: String = String()
-        @State private var toText: String = String()
-        
-        var body: some View {
-            NavigationStack(path: $path) {
-                VStack(alignment: .leading, spacing: Layout.headerSpacing) {
-                    ZStack() {
-                        LazyHStack(spacing: Layout.carouselSpacing) {
-                            
-                        }
-                        .frame(height: Layout.carouselHeight)
-                    }
-                    .frame(height: Layout.carouselContainerHeight)
-                    
-                    HStack(spacing: Layout.cardSpacing) {
-                        VStack(alignment: .leading, spacing: 0) {
-                            Button {
-                                path.append(Route.cities(.from))
-                            } label: {
-                                Text(fromText.isEmpty ? "Откуда" : fromText)
-                                    .foregroundStyle(fromText.isEmpty ? Color.customGray : .black)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            .frame(height: 48)
-                            
-                            Button {
-                                path.append(Route.cities(.to))
-                            } label: {
-                                Text(toText.isEmpty ? "Куда" : toText)
-                                    .foregroundStyle(toText.isEmpty ? Color.customGray : .black)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                            .frame(height: 48)
-                        }
-                        .font(.system(size: Layout.textFieldFontSize, weight: .regular))
-                        
-                        .padding(.horizontal, Layout.textFieldHorizontalPadding)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.white)
-                        .clipShape(
-                            RoundedRectangle(cornerRadius: Layout.textFieldCornerRadius, style: .continuous)
-                        )
-                        
-                        Button {
-                            let temp = fromText
-                            fromText = toText
-                            toText = temp
-                        } label: {
-                            Image(.swapButton)
-                                .font(.system(size: Layout.swapIconSize, weight: .semibold))
-                                .foregroundStyle(Color.customBlue)
-                                .frame(width: Layout.swapButtonSize, height: Layout.swapButtonSize)
-                                .background(Color.white)
-                                .clipShape(Circle())
-                        }
-                    }
-                    .padding(Layout.cardPadding)
-                    .background(Color.customBlue)
-                    .clipShape(
-                        RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous)
-                    )
-                    
-                    Spacer()
-                }
-                .padding(Layout.screenPadding)
-                .navigationDestination(for: Route.self) { route in
-                    switch route {
-                    case .cities(let field):
-                        CitiesListView { city in
-                            path.append(Route.stations(field, city))
-                        }
-                    case .stations(let field, let city):
-                        StationsListView(city: city) { station in
-                            let value = "\(city) (\(station))"
-                            switch field {
-                            case .from:
-                                fromText = value
-                            case .to:
-                                toText = value
-                            }
-                            path = NavigationPath()
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    struct SettingsView: View {
-        var body: some View {
-            Color.customWhite.opacity(0.1)
-                .overlay(Text("Settings"))
-        }
-    }
-    
-    struct BottomTabBar: View {
-        private enum Layout {
-            static let containerSpacing: CGFloat = 0
-            static let horizontalPadding: CGFloat = 56
-            static let iconSize: CGFloat = 30
-            static let buttonWidth: CGFloat = 75
-            static let buttonHeight: CGFloat = 49
-        }
-        
-        @Binding var selectedTab: Tab
-        
-        var body: some View {
-            VStack(spacing: Layout.containerSpacing) {
-                Divider()
-                HStack {
-                    tabButton(
-                        image: Image(.scheduleTab),
-                        tab: .schedule
-                    )
-                    
-                    Spacer()
-                    
-                    tabButton(
-                        image: Image(.settingsTab),
-                        tab: .settings
-                    )
-                }
-                .padding(.horizontal, Layout.horizontalPadding)
-            }
-        }
-        
-        private func tabButton(image: Image, tab: Tab) -> some View {
-            Button {
-                withAnimation(.easeInOut) {
-                    selectedTab = tab
-                }
-            } label: {
-                image
-                    .renderingMode(.template)
-                    .foregroundStyle(
-                        selectedTab == tab ? .customBlack : .customGray
-                    )
-                    .frame(width: Layout.iconSize, height: Layout.iconSize)
-            }
-            .frame(width: Layout.buttonWidth, height: Layout.buttonHeight)
-        }
-    }
-    
     
     // MARK: - Helper methods
     private func testFetchStations() {
