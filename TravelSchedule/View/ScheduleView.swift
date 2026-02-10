@@ -67,7 +67,6 @@ struct ScheduleView: View {
                     .frame(height: 48)
                 }
                 .font(.system(size: Layout.textFieldFontSize, weight: .regular))
-                
                 .padding(.horizontal, Layout.textFieldHorizontalPadding)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color.white)
@@ -93,6 +92,28 @@ struct ScheduleView: View {
             .clipShape(
                 RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous)
             )
+            
+            if (!fromText.isEmpty && !toText.isEmpty) {
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        
+                    } label: {
+                        Text("Найти")
+                            .foregroundStyle(.customWhite)
+                            .font(.system(size: Layout.textFieldFontSize, weight: .bold))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    .frame(width: 150, height: 60, alignment: .center)
+                    .background(Color.customBlue)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous)
+                    )
+                    
+                    Spacer()
+                }
+            }
             
             Spacer()
         }
