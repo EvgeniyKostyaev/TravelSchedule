@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @State private var errorState: ErrorState = .noInternet
+    
     var body: some View {
-        ErrorStateView(errorState: .noInternet)
+        ErrorStateView(errorState: errorState)
+            .onTapGesture {
+                errorState = errorState == .noInternet ? .serverError : .noInternet
+            }
     }
 }
 
