@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct CityStationSelectionFlowView: View {
+    private enum Layout {
+        static let backButtonPadding: CGFloat = 8
+        static let dismissAnimationDuration: CGFloat = 0.2
+    }
     private enum Route: Hashable {
         case stations(String)
     }
@@ -34,7 +38,7 @@ struct CityStationSelectionFlowView: View {
                         Image(systemName: "chevron.left")
                             .foregroundStyle(Color.customBlack)
                     }
-                    .padding(8)
+                    .padding(Layout.backButtonPadding)
                 }
             }
             .navigationDestination(for: Route.self) { route in
@@ -42,7 +46,7 @@ struct CityStationSelectionFlowView: View {
                 case .stations(let city):
                     StationsListView(city: city) { selectedStation in
                         onSelectStation(city, selectedStation)
-                        withAnimation(.easeInOut(duration: 0.2)) {
+                        withAnimation(.easeInOut(duration: Layout.dismissAnimationDuration)) {
                             dismiss()
                         }
                     }

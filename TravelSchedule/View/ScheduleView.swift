@@ -27,6 +27,12 @@ struct ScheduleView: View {
         static let cardPadding: CGFloat = 16
         static let cardCornerRadius: CGFloat = 20
         static let screenPadding: CGFloat = 16
+        static let textFieldStackSpacing: CGFloat = 0
+        static let textFieldRowHeight: CGFloat = 48
+        static let textLineLimit: Int = 1
+        static let searchButtonWidth: CGFloat = 150
+        static let searchButtonHeight: CGFloat = 60
+        static let dismissAnimationDuration: CGFloat = 0.2
     }
     
     @State private var fromText: String = String()
@@ -46,7 +52,7 @@ struct ScheduleView: View {
             .frame(height: Layout.carouselContainerHeight)
             
             HStack(spacing: Layout.cardSpacing) {
-                VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: Layout.textFieldStackSpacing) {
                     Button {
                         activeField = .from
                         isCitiesPresenting = true
@@ -55,9 +61,9 @@ struct ScheduleView: View {
                             .foregroundStyle(fromText.isEmpty ? Color.customGray : .customBlack)
                             .colorScheme(.light)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .lineLimit(1)
+                            .lineLimit(Layout.textLineLimit)
                     }
-                    .frame(height: 48)
+                    .frame(height: Layout.textFieldRowHeight)
                     
                     Button {
                         activeField = .to
@@ -67,9 +73,9 @@ struct ScheduleView: View {
                             .foregroundStyle(toText.isEmpty ? Color.customGray : .customBlack)
                             .colorScheme(.light)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .lineLimit(1)
+                            .lineLimit(Layout.textLineLimit)
                     }
-                    .frame(height: 48)
+                    .frame(height: Layout.textFieldRowHeight)
                 }
                 .font(.system(size: Layout.textFieldFontSize, weight: .regular))
                 .padding(.horizontal, Layout.textFieldHorizontalPadding)
@@ -113,7 +119,7 @@ struct ScheduleView: View {
                             .font(.system(size: Layout.textFieldFontSize, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .frame(width: 150, height: 60, alignment: .center)
+                    .frame(width: Layout.searchButtonWidth, height: Layout.searchButtonHeight, alignment: .center)
                     .background(Color.customBlue)
                     .clipShape(
                         RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous)
@@ -138,7 +144,7 @@ struct ScheduleView: View {
                     break
                 }
                 activeField = nil
-                withAnimation(.easeInOut(duration: 0.2)) {
+                withAnimation(.easeInOut(duration: Layout.dismissAnimationDuration)) {
                     isCitiesPresenting = false
                 }
             }

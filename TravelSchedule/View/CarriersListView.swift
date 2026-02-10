@@ -41,6 +41,10 @@ struct CarriersListView: View {
         static let buttonCornerRadius: CGFloat = 12
         static let buttonDotSize: CGFloat = 6
         static let timeDividerWidth: CGFloat = 56
+        static let listRowInsetTop: CGFloat = 0
+        static let buttonLabelSpacing: CGFloat = 6
+        static let buttonFontSize: CGFloat = 17
+        static let backButtonPadding: CGFloat = 8
     }
     
     private enum Route: Hashable {
@@ -181,7 +185,7 @@ struct CarriersListView: View {
                             CarrierCardView(option: option)
                                 .listRowInsets(
                                     EdgeInsets(
-                                        top: 0,
+                                        top: Layout.listRowInsetTop,
                                         leading: Layout.horizontalPadding,
                                         bottom: Layout.cardSpacing,
                                         trailing: Layout.horizontalPadding
@@ -196,9 +200,9 @@ struct CarriersListView: View {
                 Button {
                     path.append(Route.filters)
                 } label: {
-                    HStack(spacing: 6) {
+                    HStack(spacing: Layout.buttonLabelSpacing) {
                         Text("Уточнить время")
-                            .font(.system(size: 17, weight: .bold))
+                            .font(.system(size: Layout.buttonFontSize, weight: .bold))
                             .foregroundStyle(Color.customWhite)
                             .colorScheme(.light)
                         if filters.isActive {
@@ -222,7 +226,7 @@ struct CarriersListView: View {
                         Image(systemName: "chevron.left")
                             .foregroundStyle(Color.customBlack)
                     }
-                    .padding(8)
+                    .padding(Layout.backButtonPadding)
                 }
             }
             .navigationDestination(for: Route.self) { route in

@@ -31,14 +31,19 @@ enum ErrorState {
 }
 
 struct ErrorStateView: View {
+    private enum Layout {
+        static let stackSpacing: CGFloat = 16
+        static let titleFontSize: CGFloat = 24
+    }
+    
     let errorState: ErrorState
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Layout.stackSpacing) {
             errorState.image
             Text(errorState.title)
                 .foregroundStyle(.customBlack)
-                .font(.system(size: 24, weight: .bold))
+                .font(.system(size: Layout.titleFontSize, weight: .bold))
         }
         .padding()
     }

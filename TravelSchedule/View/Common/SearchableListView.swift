@@ -12,10 +12,10 @@ struct SearchableListView: View {
         func makeBody(configuration: Configuration) -> some View {
             configuration.label
                 .background(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(Color.customLightGray.opacity(configuration.isPressed ? 0.6 : 0.0))
+                    RoundedRectangle(cornerRadius: Layout.rowHighlightCornerRadius, style: .continuous)
+                        .fill(Color.customLightGray.opacity(configuration.isPressed ? Layout.highlightPressedOpacity : Layout.highlightRestOpacity))
                 )
-                .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
+                .animation(.easeInOut(duration: Layout.highlightAnimationDuration), value: configuration.isPressed)
         }
     }
     
@@ -30,6 +30,14 @@ struct SearchableListView: View {
         static let rowSpacing: CGFloat = 24
         static let rowChevronSize: CGFloat = 20
         static let emptyTitleSize: CGFloat = 24
+        static let searchStackSpacing: CGFloat = 8
+        static let textFontSize: CGFloat = 17
+        static let rowHighlightCornerRadius: CGFloat = 12
+        static let highlightPressedOpacity: CGFloat = 0.6
+        static let highlightRestOpacity: CGFloat = 0.0
+        static let highlightAnimationDuration: CGFloat = 0.15
+        static let listRowInsetTop: CGFloat = 0
+        static let listRowInsetBottom: CGFloat = 0
     }
     
     @State private var query: String = ""
@@ -66,7 +74,7 @@ struct SearchableListView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-            HStack(spacing: 8) {
+            HStack(spacing: Layout.searchStackSpacing) {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: Layout.searchIconSize, weight: .regular))
                     .foregroundStyle(Color.customGray)
@@ -77,7 +85,7 @@ struct SearchableListView: View {
                     prompt: Text(placeholder).foregroundStyle(Color.customGray)
                 )
                 .foregroundStyle(Color.customBlack)
-                .font(.system(size: 17, weight: .regular))
+                .font(.system(size: Layout.textFontSize, weight: .regular))
                 
                 if !query.isEmpty {
                     Button {
@@ -115,7 +123,7 @@ struct SearchableListView: View {
                         } label: {
                             HStack {
                                 Text(item)
-                                    .font(.system(size: 17, weight: .regular))
+                                    .font(.system(size: Layout.textFontSize, weight: .regular))
                                     .foregroundStyle(Color.customBlack)
                                 
                                 Spacer()
@@ -131,9 +139,9 @@ struct SearchableListView: View {
                         .buttonStyle(RowHighlightButtonStyle())
                         .listRowInsets(
                             EdgeInsets(
-                                top: 0,
+                                top: Layout.listRowInsetTop,
                                 leading: Layout.horizontalPadding,
-                                bottom: 0,
+                                bottom: Layout.listRowInsetBottom,
                                 trailing: Layout.horizontalPadding
                             )
                         )

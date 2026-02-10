@@ -14,10 +14,13 @@ struct FiltersView: View {
         static let rowSpacing: CGFloat = 30
         static let titleFontSize: CGFloat = 24
         static let subtitleFontSize: CGFloat = 17
+        static let applyFontSize: CGFloat = 17
         static let buttonHeight: CGFloat = 60
         static let buttonCornerRadius: CGFloat = 12
         static let checkboxSize: CGFloat = 18
         static let radioSize: CGFloat = 18
+        static let transfersTopPadding: CGFloat = 4
+        static let buttonLabelSpacing: CGFloat = 6
     }
     
     @Binding var filters: CarriersListView.FiltersState
@@ -61,7 +64,7 @@ struct FiltersView: View {
                 .font(.system(size: Layout.titleFontSize, weight: .semibold))
                 .foregroundStyle(Color.customBlack)
                 .padding(.horizontal, Layout.horizontalPadding)
-                .padding(.top, 4)
+                .padding(.top, Layout.transfersTopPadding)
             
             VStack(spacing: Layout.rowSpacing) {
                 radioRow(title: "Да", value: .yes)
@@ -74,9 +77,9 @@ struct FiltersView: View {
             Button {
                 onApply()
             } label: {
-                HStack(spacing: 6) {
+                HStack(spacing: Layout.buttonLabelSpacing) {
                     Text("Применить")
-                        .font(.system(size: 17, weight: .bold))
+                        .font(.system(size: Layout.applyFontSize, weight: .bold))
                         .foregroundStyle(Color.customWhite)
                         .colorScheme(.light)
                 }

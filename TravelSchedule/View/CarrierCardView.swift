@@ -18,6 +18,11 @@ struct CarrierCardView: View {
         static let timeRowHeight: CGFloat = 48
         static let cardPadding: CGFloat = 12
         static let cardCornerRadius: CGFloat = 16
+        static let iconCornerRadius: CGFloat = 12
+        static let iconFontSize: CGFloat = 18
+        static let titleStackSpacing: CGFloat = 2
+        static let timeStackSpacing: CGFloat = 8
+        static let dividerHeight: CGFloat = 1
     }
     
     var option: CarrierOption
@@ -26,15 +31,15 @@ struct CarrierCardView: View {
         VStack(alignment: .leading, spacing: Layout.titleSpacing) {
             HStack {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    RoundedRectangle(cornerRadius: Layout.iconCornerRadius, style: .continuous)
                         .fill(Color.customWhite)
                     Image(systemName: "train.side.front.car")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: Layout.iconFontSize, weight: .bold))
                         .foregroundStyle(Color.customRed)
                 }
                 .frame(width: Layout.iconSize, height: Layout.iconSize)
                 
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: Layout.titleStackSpacing) {
                     Text(option.carrierName)
                         .font(.system(size: Layout.titleFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlack)
@@ -52,14 +57,14 @@ struct CarrierCardView: View {
             }
             .frame(maxWidth: .infinity)
             
-            HStack(spacing: 8) {
+            HStack(spacing: Layout.timeStackSpacing) {
                 Text(option.departureTime)
                     .font(.system(size: Layout.timeFontSize, weight: .regular))
                     .foregroundStyle(Color.customBlack)
                 
                 Rectangle()
                     .fill(Color.customGray)
-                    .frame(height: 1)
+                    .frame(height: Layout.dividerHeight)
                 
                 Text(option.durationLabel)
                     .font(.system(size: Layout.subtitleFontSize, weight: .regular))
@@ -67,7 +72,7 @@ struct CarrierCardView: View {
                 
                 Rectangle()
                     .fill(Color.customGray)
-                    .frame(height: 1)
+                    .frame(height: Layout.dividerHeight)
                 
                 Text(option.arrivalTime)
                     .font(.system(size: Layout.timeFontSize, weight: .regular))
