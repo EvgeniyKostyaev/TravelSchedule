@@ -13,10 +13,6 @@ enum ActiveField {
 }
 
 struct ScheduleView: View {
-    private enum Route: Hashable {
-        case stations(String)
-    }
-    
     private enum Layout {
         static let headerSpacing: CGFloat = 16
         static let carouselSpacing: CGFloat = 16
@@ -37,7 +33,6 @@ struct ScheduleView: View {
     @State private var toText: String = String()
     @State private var activeField: ActiveField?
     @State private var isPresenting: Bool = false
-    @State private var navigationPath = NavigationPath()
     
     var body: some View {
         VStack(alignment: .leading, spacing: Layout.headerSpacing) {
@@ -103,40 +98,19 @@ struct ScheduleView: View {
         }
         .padding(Layout.screenPadding)
         .fullScreenCover(isPresented: $isPresenting) {
-            NavigationStack(path: $navigationPath) {
-                CitiesListView { selectedCity in
-                    navigationPath.append(Route.stations(selectedCity))
+            CityStationSelectionFlowView { city, station in
+                let value = "\(city) (\(station))"
+                switch activeField {
+                case .from:
+                    fromText = value
+                case .to:
+                    toText = value
+                case .none:
+                    break
                 }
-                .navigationDestination(for: Route.self) { route in
-                    switch route {
-                    case .stations(let city):
-                        StationsListView(city: city) { selectedStation in
-                            let value = "\(city) (\(selectedStation))"
-                            switch activeField {
-                            case .from:
-                                fromText = value
-                            case .to:
-                                toText = value
-                            case .none:
-                                break
-                            }
-                            activeField = nil
-                            navigationPath = NavigationPath()
-                            isPresenting = false
-                        }
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            navigationPath = NavigationPath()
-                            isPresenting = false
-                            activeField = nil
-                        } label: {
-                            Image(systemName: "chevron.left")
-                                .foregroundStyle(Color.customBlack)
-                        }
-                    }
+                activeField = nil
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isPresenting = false
                 }
             }
         }
