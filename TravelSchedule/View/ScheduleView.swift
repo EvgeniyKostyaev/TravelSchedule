@@ -55,6 +55,7 @@ struct ScheduleView: View {
                             .foregroundStyle(fromText.isEmpty ? Color.customGray : .customBlack)
                             .colorScheme(.light)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .lineLimit(1)
                     }
                     .frame(height: 48)
                     
@@ -66,6 +67,7 @@ struct ScheduleView: View {
                             .foregroundStyle(toText.isEmpty ? Color.customGray : .customBlack)
                             .colorScheme(.light)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .lineLimit(1)
                     }
                     .frame(height: 48)
                 }

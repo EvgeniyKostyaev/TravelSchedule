@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  TravelSchedule
 //
 //  Created by Evgeniy Kostyaev on 29.01.2026.
@@ -12,7 +12,7 @@ enum Tab: Int {
     case settings
 }
 
-struct ContentView: View {
+struct MainView: View {
     @State private var selectedTab: Tab = .schedule
     
     var body: some View {
@@ -167,5 +167,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    MainView()
 }
