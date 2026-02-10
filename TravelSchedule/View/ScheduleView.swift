@@ -137,7 +137,7 @@ struct ScheduleView: View {
             }
         }
         .fullScreenCover(isPresented: $isCarriersPresented) {
-            CarriersListView()
+            CarriersListView(fromText: fromText, toText: toText)
         }
     }
 }

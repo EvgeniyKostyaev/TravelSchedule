@@ -11,17 +11,20 @@ struct CarriersListView: View {
     private enum Layout {
         static let horizontalPadding: CGFloat = 16
         static let sectionSpacing: CGFloat = 16
-        static let cardCornerRadius: CGFloat = 12
+        static let cardCornerRadius: CGFloat = 16
         static let cardPadding: CGFloat = 12
         static let cardSpacing: CGFloat = 12
         static let titleSpacing: CGFloat = 8
         static let titleFontSize: CGFloat = 17
-        static let headerFontSize: CGFloat = 15
+        static let headerFontSize: CGFloat = 24
         static let subtitleFontSize: CGFloat = 13
-        static let timeFontSize: CGFloat = 15
-        static let buttonHeight: CGFloat = 44
+        static let timeFontSize: CGFloat = 17
+        static let buttonHeight: CGFloat = 60
         static let buttonCornerRadius: CGFloat = 12
         static let buttonDotSize: CGFloat = 6
+        static let iconSize: CGFloat = 38
+        static let timeRowHeight: CGFloat = 48
+        static let timeDividerWidth: CGFloat = 56
     }
     
     private enum Route: Hashable {
@@ -68,6 +71,8 @@ struct CarriersListView: View {
     @State private var path = NavigationPath()
     @State private var filters = FiltersState()
     
+    private let fromText: String
+    private let toText: String
     private let options: [CarrierOption] = [
         CarrierOption(
             carrierName: "РЖД",
@@ -123,8 +128,8 @@ struct CarriersListView: View {
     var body: some View {
         NavigationStack(path: $path) {
             VStack(spacing: Layout.sectionSpacing) {
-                Text("Москва (Ярославский вокзал) → Санкт Петербург (Балтийский вокзал)")
-                    .font(.system(size: Layout.headerFontSize, weight: .semibold))
+                Text("\(fromText) → \(toText)")
+                    .font(.system(size: Layout.headerFontSize, weight: .bold))
                     .foregroundStyle(Color.customBlack)
                     .padding(.horizontal, Layout.horizontalPadding)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -139,14 +144,23 @@ struct CarriersListView: View {
                     
                     Spacer()
                 } else {
-                    ScrollView {
-                        VStack(spacing: Layout.cardSpacing) {
-                            ForEach(filteredOptions) { option in
-                                carrierCard(option)
-                            }
+                    List {
+                        ForEach(filteredOptions) { option in
+                            carrierCard(option)
+                                .listRowInsets(
+                                    EdgeInsets(
+                                        top: 0,
+                                        leading: Layout.horizontalPadding,
+                                        bottom: Layout.cardSpacing,
+                                        trailing: Layout.horizontalPadding
+                                    )
+                                )
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.customWhite)
                         }
-                        .padding(.horizontal, Layout.horizontalPadding)
                     }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
                 }
                 
                 Button {
@@ -167,10 +181,8 @@ struct CarriersListView: View {
                 .background(Color.customBlue)
                 .clipShape(RoundedRectangle(cornerRadius: Layout.buttonCornerRadius, style: .continuous))
                 .padding(.horizontal, Layout.horizontalPadding)
-                .padding(.bottom, 12)
+                .padding(.bottom, Layout.horizontalPadding)
             }
-            .navigationTitle("Список перевозчиков")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
@@ -192,44 +204,70 @@ struct CarriersListView: View {
         }
     }
     
+    init(fromText: String, toText: String) {
+        self.fromText = fromText
+        self.toText = toText
+    }
+    
     private func carrierCard(_ option: CarrierOption) -> some View {
         VStack(alignment: .leading, spacing: Layout.titleSpacing) {
             HStack {
-                Text(option.carrierName)
-                    .font(.system(size: Layout.titleFontSize, weight: .semibold))
-                    .foregroundStyle(Color.customBlack)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Color.customWhite)
+                    Image(systemName: "train.side.front.car")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundStyle(Color.customRed)
+                }
+                .frame(width: Layout.iconSize, height: Layout.iconSize)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(option.carrierName)
+                        .font(.system(size: Layout.titleFontSize, weight: .semibold))
+                        .foregroundStyle(Color.customBlack)
+                    if !option.routeNote.isEmpty {
+                        Text(option.routeNote)
+                            .font(.system(size: Layout.subtitleFontSize, weight: .regular))
+                            .foregroundStyle(Color.customRed)
+                    }
+                }
+                
                 Spacer()
                 Text(option.dateLabel)
                     .font(.system(size: Layout.subtitleFontSize, weight: .regular))
                     .foregroundStyle(Color.customGray)
             }
+            .frame(maxWidth: .infinity)
             
-            if !option.routeNote.isEmpty {
-                Text(option.routeNote)
-                    .font(.system(size: Layout.subtitleFontSize, weight: .regular))
-                    .foregroundStyle(Color.customRed)
-            }
-            
-            HStack {
+            HStack(spacing: 8) {
                 Text(option.departureTime)
                     .font(.system(size: Layout.timeFontSize, weight: .semibold))
-                Spacer()
+                    .foregroundStyle(Color.customBlack)
+                
+                Rectangle()
+                    .fill(Color.customLightGray)
+                    .frame(height: 1)
+                
                 Text(option.durationLabel)
                     .font(.system(size: Layout.subtitleFontSize, weight: .regular))
                     .foregroundStyle(Color.customGray)
-                Spacer()
+                
+                Rectangle()
+                    .fill(Color.customLightGray)
+                    .frame(height: 1)
+                
                 Text(option.arrivalTime)
                     .font(.system(size: Layout.timeFontSize, weight: .semibold))
+                    .foregroundStyle(Color.customBlack)
             }
-            .foregroundStyle(Color.customBlack)
+            .frame(height: Layout.timeRowHeight)
         }
         .padding(Layout.cardPadding)
-        .background(Color.customWhite)
+        .background(Color.customLightGray)
         .clipShape(RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous))
-        .shadow(color: .black.opacity(0.08), radius: 8, y: 4)
     }
 }
 
 #Preview {
-    CarriersListView()
+    CarriersListView(fromText: "Москва (Ярославский вокзал)", toText: "Санкт Петербург (Балтийский вокзал)")
 }
