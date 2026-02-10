@@ -9,8 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     var body: some View {
-        Color.customWhite.opacity(0.1)
-            .overlay(Text("Settings"))
+        ErrorStateView(errorState: .noInternet)
     }
 }
 
