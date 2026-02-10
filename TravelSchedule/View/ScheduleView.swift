@@ -32,7 +32,8 @@ struct ScheduleView: View {
     @State private var fromText: String = String()
     @State private var toText: String = String()
     @State private var activeField: ActiveField?
-    @State private var isPresenting: Bool = false
+    @State private var isCitiesPresenting: Bool = false
+    @State private var isCarriersPresented: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: Layout.headerSpacing) {
@@ -48,7 +49,7 @@ struct ScheduleView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Button {
                         activeField = .from
-                        isPresenting = true
+                        isCitiesPresenting = true
                     } label: {
                         Text(fromText.isEmpty ? "Откуда" : fromText)
                             .foregroundStyle(fromText.isEmpty ? Color.customGray : .black)
@@ -58,7 +59,7 @@ struct ScheduleView: View {
                     
                     Button {
                         activeField = .to
-                        isPresenting = true
+                        isCitiesPresenting = true
                     } label: {
                         Text(toText.isEmpty ? "Куда" : toText)
                             .foregroundStyle(toText.isEmpty ? Color.customGray : .black)
@@ -98,7 +99,7 @@ struct ScheduleView: View {
                     Spacer()
                     
                     Button {
-                        
+                        isCarriersPresented = true
                     } label: {
                         Text("Найти")
                             .foregroundStyle(.customWhite)
@@ -118,7 +119,7 @@ struct ScheduleView: View {
             Spacer()
         }
         .padding(Layout.screenPadding)
-        .fullScreenCover(isPresented: $isPresenting) {
+        .fullScreenCover(isPresented: $isCitiesPresenting) {
             CityStationSelectionFlowView { city, station in
                 let value = "\(city) (\(station))"
                 switch activeField {
@@ -131,9 +132,12 @@ struct ScheduleView: View {
                 }
                 activeField = nil
                 withAnimation(.easeInOut(duration: 0.2)) {
-                    isPresenting = false
+                    isCitiesPresenting = false
                 }
             }
+        }
+        .fullScreenCover(isPresented: $isCarriersPresented) {
+            CarriersListView()
         }
     }
 }
