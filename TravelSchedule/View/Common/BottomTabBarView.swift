@@ -8,7 +8,6 @@
 import SwiftUI
 
 private enum Layout {
-    static let containerSpacing: CGFloat = 0
     static let horizontalPadding: CGFloat = 56
     static let iconSize: CGFloat = 30
     static let buttonWidth: CGFloat = 75
@@ -19,7 +18,7 @@ struct BottomTabBarView: View {
     @Binding var selectedTab: Tab
     
     var body: some View {
-        VStack(spacing: Layout.containerSpacing) {
+        VStack(spacing: .zero) {
             Divider()
             HStack {
                 tabButton(
