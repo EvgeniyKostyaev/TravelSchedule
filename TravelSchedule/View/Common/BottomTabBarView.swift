@@ -7,15 +7,15 @@
 
 import SwiftUI
 
+private enum Layout {
+    static let containerSpacing: CGFloat = 0
+    static let horizontalPadding: CGFloat = 56
+    static let iconSize: CGFloat = 30
+    static let buttonWidth: CGFloat = 75
+    static let buttonHeight: CGFloat = 49
+}
+
 struct BottomTabBarView: View {
-    private enum Layout {
-        static let containerSpacing: CGFloat = 0
-        static let horizontalPadding: CGFloat = 56
-        static let iconSize: CGFloat = 30
-        static let buttonWidth: CGFloat = 75
-        static let buttonHeight: CGFloat = 49
-    }
-    
     @Binding var selectedTab: Tab
     
     var body: some View {

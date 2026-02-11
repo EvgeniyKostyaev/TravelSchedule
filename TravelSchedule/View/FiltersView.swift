@@ -7,22 +7,22 @@
 
 import SwiftUI
 
+private enum Layout {
+    static let horizontalPadding: CGFloat = 16
+    static let sectionSpacing: CGFloat = 35
+    static let rowSpacing: CGFloat = 30
+    static let titleFontSize: CGFloat = 24
+    static let subtitleFontSize: CGFloat = 17
+    static let applyFontSize: CGFloat = 17
+    static let buttonHeight: CGFloat = 60
+    static let buttonCornerRadius: CGFloat = 12
+    static let checkboxSize: CGFloat = 18
+    static let radioSize: CGFloat = 18
+    static let transfersTopPadding: CGFloat = 4
+    static let buttonLabelSpacing: CGFloat = 6
+}
+
 struct FiltersView: View {
-    private enum Layout {
-        static let horizontalPadding: CGFloat = 16
-        static let sectionSpacing: CGFloat = 35
-        static let rowSpacing: CGFloat = 30
-        static let titleFontSize: CGFloat = 24
-        static let subtitleFontSize: CGFloat = 17
-        static let applyFontSize: CGFloat = 17
-        static let buttonHeight: CGFloat = 60
-        static let buttonCornerRadius: CGFloat = 12
-        static let checkboxSize: CGFloat = 18
-        static let radioSize: CGFloat = 18
-        static let transfersTopPadding: CGFloat = 4
-        static let buttonLabelSpacing: CGFloat = 6
-    }
-    
     @Binding var filters: CarriersListView.FiltersState
     private let onApply: () -> Void
     

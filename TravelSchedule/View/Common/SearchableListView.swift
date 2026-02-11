@@ -7,40 +7,21 @@
 
 import SwiftUI
 
+private enum Layout {
+    static let horizontalPadding: CGFloat = 16
+    static let searchHeight: CGFloat = 36
+    static let searchCornerRadius: CGFloat = 12
+    static let searchIconSize: CGFloat = 16
+    static let clearButtonSize: CGFloat = 18
+    static let searchHorizontalPadding: CGFloat = 12
+    static let sectionSpacing: CGFloat = 16
+    static let emptyTitleSize: CGFloat = 24
+    static let searchStackSpacing: CGFloat = 8
+    static let textFontSize: CGFloat = 17
+}
+
 struct SearchableListView: View {
-    private struct RowHighlightButtonStyle: ButtonStyle {
-        func makeBody(configuration: Configuration) -> some View {
-            configuration.label
-                .background(
-                    RoundedRectangle(cornerRadius: Layout.rowHighlightCornerRadius, style: .continuous)
-                        .fill(Color.customLightGray.opacity(configuration.isPressed ? Layout.highlightPressedOpacity : Layout.highlightRestOpacity))
-                )
-                .animation(.easeInOut(duration: Layout.highlightAnimationDuration), value: configuration.isPressed)
-        }
-    }
-    
-    private enum Layout {
-        static let horizontalPadding: CGFloat = 16
-        static let searchHeight: CGFloat = 36
-        static let searchCornerRadius: CGFloat = 12
-        static let searchIconSize: CGFloat = 16
-        static let clearButtonSize: CGFloat = 18
-        static let searchHorizontalPadding: CGFloat = 12
-        static let sectionSpacing: CGFloat = 16
-        static let rowSpacing: CGFloat = 24
-        static let rowChevronSize: CGFloat = 20
-        static let emptyTitleSize: CGFloat = 24
-        static let searchStackSpacing: CGFloat = 8
-        static let textFontSize: CGFloat = 17
-        static let rowHighlightCornerRadius: CGFloat = 12
-        static let highlightPressedOpacity: CGFloat = 0.6
-        static let highlightRestOpacity: CGFloat = 0.0
-        static let highlightAnimationDuration: CGFloat = 0.15
-        static let listRowInsetTop: CGFloat = 0
-        static let listRowInsetBottom: CGFloat = 0
-    }
-    
-    @State private var query: String = ""
+    @State private var query: String = String()
     
     private let title: String
     private let placeholder: String
@@ -118,33 +99,9 @@ struct SearchableListView: View {
             } else {
                 List {
                     ForEach(filteredItems, id: \.self) { item in
-                        Button {
+                        SearchableCell(item: item) { item in
                             onSelect(item)
-                        } label: {
-                            HStack {
-                                Text(item)
-                                    .font(.system(size: Layout.textFontSize, weight: .regular))
-                                    .foregroundStyle(Color.customBlack)
-                                
-                                Spacer()
-                                
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: Layout.rowChevronSize, weight: .semibold))
-                                    .foregroundStyle(Color.customBlack)
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.vertical, Layout.rowSpacing / 2)
-                            .contentShape(Rectangle())
                         }
-                        .buttonStyle(RowHighlightButtonStyle())
-                        .listRowInsets(
-                            EdgeInsets(
-                                top: Layout.listRowInsetTop,
-                                leading: Layout.horizontalPadding,
-                                bottom: Layout.listRowInsetBottom,
-                                trailing: Layout.horizontalPadding
-                            )
-                        )
                     }
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.customWhite)

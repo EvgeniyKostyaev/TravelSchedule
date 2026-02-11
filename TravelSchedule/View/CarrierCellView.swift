@@ -7,24 +7,23 @@
 
 import SwiftUI
 
-struct CarrierCardView: View {
-    
-    private enum Layout {
-        static let titleSpacing: CGFloat = 8
-        static let iconSize: CGFloat = 38
-        static let titleFontSize: CGFloat = 17
-        static let subtitleFontSize: CGFloat = 12
-        static let timeFontSize: CGFloat = 17
-        static let timeRowHeight: CGFloat = 48
-        static let cardPadding: CGFloat = 12
-        static let cardCornerRadius: CGFloat = 16
-        static let iconCornerRadius: CGFloat = 12
-        static let iconFontSize: CGFloat = 18
-        static let titleStackSpacing: CGFloat = 2
-        static let timeStackSpacing: CGFloat = 8
-        static let dividerHeight: CGFloat = 1
-    }
-    
+private enum Layout {
+    static let titleSpacing: CGFloat = 8
+    static let iconSize: CGFloat = 38
+    static let titleFontSize: CGFloat = 17
+    static let subtitleFontSize: CGFloat = 12
+    static let timeFontSize: CGFloat = 17
+    static let timeRowHeight: CGFloat = 48
+    static let cardPadding: CGFloat = 12
+    static let cardCornerRadius: CGFloat = 16
+    static let iconCornerRadius: CGFloat = 12
+    static let iconFontSize: CGFloat = 18
+    static let titleStackSpacing: CGFloat = 2
+    static let timeStackSpacing: CGFloat = 8
+    static let dividerHeight: CGFloat = 1
+}
+
+struct CarrierCellView: View {
     var option: CarrierOption
     
     var body: some View {
@@ -89,7 +88,7 @@ struct CarrierCardView: View {
 }
 
 #Preview {
-    CarrierCardView(option: CarrierOption(
+    CarrierCellView(option: CarrierOption(
         carrierName: "РЖД",
         routeTitle: "Москва (Ярославский вокзал) → Санкт Петербург (Балтийский вокзал)",
         routeNote: "С пересадкой в Костроме",

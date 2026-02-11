@@ -12,29 +12,29 @@ enum ActiveField {
     case to
 }
 
+private enum Layout {
+    static let headerSpacing: CGFloat = 16
+    static let carouselSpacing: CGFloat = 16
+    static let carouselHeight: CGFloat = 144
+    static let carouselContainerHeight: CGFloat = 188
+    static let cardSpacing: CGFloat = 16
+    static let textFieldFontSize: CGFloat = 17
+    static let textFieldHorizontalPadding: CGFloat = 16
+    static let textFieldCornerRadius: CGFloat = 20
+    static let swapIconSize: CGFloat = 16
+    static let swapButtonSize: CGFloat = 36
+    static let cardPadding: CGFloat = 16
+    static let cardCornerRadius: CGFloat = 20
+    static let screenPadding: CGFloat = 16
+    static let textFieldStackSpacing: CGFloat = 0
+    static let textFieldRowHeight: CGFloat = 48
+    static let textLineLimit: Int = 1
+    static let searchButtonWidth: CGFloat = 150
+    static let searchButtonHeight: CGFloat = 60
+    static let dismissAnimationDuration: CGFloat = 0.2
+}
+
 struct ScheduleView: View {
-    private enum Layout {
-        static let headerSpacing: CGFloat = 16
-        static let carouselSpacing: CGFloat = 16
-        static let carouselHeight: CGFloat = 144
-        static let carouselContainerHeight: CGFloat = 188
-        static let cardSpacing: CGFloat = 16
-        static let textFieldFontSize: CGFloat = 17
-        static let textFieldHorizontalPadding: CGFloat = 16
-        static let textFieldCornerRadius: CGFloat = 20
-        static let swapIconSize: CGFloat = 16
-        static let swapButtonSize: CGFloat = 36
-        static let cardPadding: CGFloat = 16
-        static let cardCornerRadius: CGFloat = 20
-        static let screenPadding: CGFloat = 16
-        static let textFieldStackSpacing: CGFloat = 0
-        static let textFieldRowHeight: CGFloat = 48
-        static let textLineLimit: Int = 1
-        static let searchButtonWidth: CGFloat = 150
-        static let searchButtonHeight: CGFloat = 60
-        static let dismissAnimationDuration: CGFloat = 0.2
-    }
-    
     @State private var fromText: String = String()
     @State private var toText: String = String()
     @State private var activeField: ActiveField?

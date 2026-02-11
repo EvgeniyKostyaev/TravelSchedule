@@ -7,11 +7,12 @@
 
 import SwiftUI
 
+private enum Layout {
+    static let backButtonPadding: CGFloat = 8
+    static let dismissAnimationDuration: CGFloat = 0.2
+}
+
 struct CityStationSelectionFlowView: View {
-    private enum Layout {
-        static let backButtonPadding: CGFloat = 8
-        static let dismissAnimationDuration: CGFloat = 0.2
-    }
     private enum Route: Hashable {
         case stations(String)
     }

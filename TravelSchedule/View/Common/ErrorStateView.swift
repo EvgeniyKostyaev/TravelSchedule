@@ -30,12 +30,12 @@ enum ErrorState {
     }
 }
 
+private enum Layout {
+    static let stackSpacing: CGFloat = 16
+    static let titleFontSize: CGFloat = 24
+}
+
 struct ErrorStateView: View {
-    private enum Layout {
-        static let stackSpacing: CGFloat = 16
-        static let titleFontSize: CGFloat = 24
-    }
-    
     let errorState: ErrorState
     
     var body: some View {

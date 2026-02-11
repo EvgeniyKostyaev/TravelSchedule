@@ -29,24 +29,23 @@ enum TimeSlot: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+private enum Layout {
+    static let horizontalPadding: CGFloat = 16
+    static let sectionSpacing: CGFloat = 16
+    static let cardSpacing: CGFloat = 12
+    static let titleFontSize: CGFloat = 24
+    static let headerFontSize: CGFloat = 24
+    static let buttonHeight: CGFloat = 60
+    static let buttonCornerRadius: CGFloat = 12
+    static let buttonDotSize: CGFloat = 6
+    static let timeDividerWidth: CGFloat = 56
+    static let listRowInsetTop: CGFloat = 0
+    static let buttonLabelSpacing: CGFloat = 6
+    static let buttonFontSize: CGFloat = 17
+    static let backButtonPadding: CGFloat = 8
+}
+
 struct CarriersListView: View {
-    
-    private enum Layout {
-        static let horizontalPadding: CGFloat = 16
-        static let sectionSpacing: CGFloat = 16
-        static let cardSpacing: CGFloat = 12
-        static let titleFontSize: CGFloat = 24
-        static let headerFontSize: CGFloat = 24
-        static let buttonHeight: CGFloat = 60
-        static let buttonCornerRadius: CGFloat = 12
-        static let buttonDotSize: CGFloat = 6
-        static let timeDividerWidth: CGFloat = 56
-        static let listRowInsetTop: CGFloat = 0
-        static let buttonLabelSpacing: CGFloat = 6
-        static let buttonFontSize: CGFloat = 17
-        static let backButtonPadding: CGFloat = 8
-    }
-    
     private enum Route: Hashable {
         case filters
     }
@@ -182,7 +181,7 @@ struct CarriersListView: View {
                 } else {
                     List {
                         ForEach(filteredOptions) { option in
-                            CarrierCardView(option: option)
+                            CarrierCellView(option: option)
                                 .listRowInsets(
                                     EdgeInsets(
                                         top: Layout.listRowInsetTop,
