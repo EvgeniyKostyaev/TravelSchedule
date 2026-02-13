@@ -57,7 +57,7 @@ struct StationsListView: View {
             items: stations,
             onSelect: onSelect
         )
-        .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CarrierOption: Identifiable {
+struct CarrierOption: Identifiable, Hashable {
     let id = UUID()
     let carrierName: String
     let routeTitle: String
@@ -18,6 +18,8 @@ struct CarrierOption: Identifiable {
     let durationLabel: String
     let hasTransfers: Bool
     let timeSlot: TimeSlot
+    let email: String
+    let phone: String
 }
 
 enum TimeSlot: String, CaseIterable, Identifiable {
@@ -48,6 +50,7 @@ private enum Layout {
 struct CarriersListView: View {
     private enum Route: Hashable {
         case filters
+        case carrierDetails(CarrierOption)
     }
     
     enum TransfersFilter: String {
@@ -85,7 +88,9 @@ struct CarriersListView: View {
             arrivalTime: "08:15",
             durationLabel: "20 часов",
             hasTransfers: true,
-            timeSlot: .night
+            timeSlot: .night,
+            email: "info@rzd.ru",
+            phone: "+7 (904) 329-27-71"
         ),
         CarrierOption(
             carrierName: "ФК",
@@ -96,7 +101,9 @@ struct CarriersListView: View {
             arrivalTime: "09:00",
             durationLabel: "9 часов",
             hasTransfers: false,
-            timeSlot: .night
+            timeSlot: .night,
+            email: "support@fk.ru",
+            phone: "+7 (812) 555-12-34"
         ),
         CarrierOption(
             carrierName: "Урал логистика",
@@ -107,7 +114,9 @@ struct CarriersListView: View {
             arrivalTime: "21:00",
             durationLabel: "9 часов",
             hasTransfers: false,
-            timeSlot: .day
+            timeSlot: .day,
+            email: "contact@ural-log.ru",
+            phone: "+7 (343) 777-45-67"
         ),
         CarrierOption(
             carrierName: "РЖД",
@@ -118,7 +127,9 @@ struct CarriersListView: View {
             arrivalTime: "08:15",
             durationLabel: "20 часов",
             hasTransfers: true,
-            timeSlot: .night
+            timeSlot: .night,
+            email: "info@rzd.ru",
+            phone: "+7 (904) 329-27-71"
         ),
         CarrierOption(
             carrierName: "ФК",
@@ -129,7 +140,9 @@ struct CarriersListView: View {
             arrivalTime: "09:00",
             durationLabel: "9 часов",
             hasTransfers: false,
-            timeSlot: .night
+            timeSlot: .night,
+            email: "support@fk.ru",
+            phone: "+7 (812) 555-12-34"
         ),
         CarrierOption(
             carrierName: "Урал логистика",
@@ -140,7 +153,9 @@ struct CarriersListView: View {
             arrivalTime: "21:00",
             durationLabel: "9 часов",
             hasTransfers: false,
-            timeSlot: .day
+            timeSlot: .day,
+            email: "contact@ural-log.ru",
+            phone: "+7 (343) 777-45-67"
         )
     ]
     
@@ -181,16 +196,21 @@ struct CarriersListView: View {
                 } else {
                     List {
                         ForEach(filteredOptions) { option in
-                            CarrierCellView(option: option)
-                                .listRowInsets(
-                                    EdgeInsets(
-                                        top: Layout.listRowInsetTop,
-                                        leading: Layout.horizontalPadding,
-                                        bottom: Layout.cardSpacing,
-                                        trailing: Layout.horizontalPadding
-                                    )
+                            Button {
+                                path.append(Route.carrierDetails(option))
+                            } label: {
+                                CarrierCellView(option: option)
+                            }
+                            .buttonStyle(.plain)
+                            .listRowInsets(
+                                EdgeInsets(
+                                    top: Layout.listRowInsetTop,
+                                    leading: Layout.horizontalPadding,
+                                    bottom: Layout.cardSpacing,
+                                    trailing: Layout.horizontalPadding
                                 )
-                                .listRowSeparator(.hidden)
+                            )
+                            .listRowSeparator(.hidden)
                         }
                     }
                     .listStyle(.plain)
@@ -234,6 +254,8 @@ struct CarriersListView: View {
                     FiltersView(filters: $filters) {
                         path.removeLast()
                     }
+                case .carrierDetails(let option):
+                    CarrierDetailsView(option: option)
                 }
             }
         }

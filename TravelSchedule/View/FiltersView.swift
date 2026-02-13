@@ -94,7 +94,7 @@ struct FiltersView: View {
             .padding(.horizontal, Layout.horizontalPadding)
             .padding(.bottom, Layout.horizontalPadding)
         }
-        .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {

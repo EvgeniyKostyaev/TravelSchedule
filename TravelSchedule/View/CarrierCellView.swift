@@ -97,6 +97,8 @@ struct CarrierCellView: View {
         arrivalTime: "08:15",
         durationLabel: "20 часов",
         hasTransfers: true,
-        timeSlot: .night
+        timeSlot: .night,
+        email: "info@rzd.ru",
+        phone: "+7 (904) 329-27-71"
     ))
 }
