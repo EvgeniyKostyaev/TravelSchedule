@@ -8,15 +8,11 @@
 import SwiftUI
 
 private enum Layout {
-    static let horizontalPadding: CGFloat = 16
-    static let sectionTopPadding: CGFloat = 16
     static let logoHeight: CGFloat = 104
-    static let detailsTopPadding: CGFloat = 16
-    static let detailsBlockPadding: CGFloat = 16
     static let titleFontSize: CGFloat = 24
     static let labelFontSize: CGFloat = 17
     static let valueFontSize: CGFloat = 12
-    static let rowSpacing: CGFloat = 30
+    static let rowSpacing: CGFloat = 28
     static let fallbackLogoFontSize: CGFloat = 56
     static let logoCornerRadius: CGFloat = 12
 }
@@ -47,7 +43,7 @@ struct CarrierDetailsView: View {
             .frame(height: Layout.logoHeight)
             .clipped()
             .clipShape(RoundedRectangle(cornerRadius: Layout.logoCornerRadius, style: .continuous))
-            .padding(.top, Layout.sectionTopPadding)
+            .padding(.top)
             
             VStack(alignment: .leading, spacing: Layout.rowSpacing) {
                 Text(option.carrierName)
@@ -79,7 +75,7 @@ struct CarrierDetailsView: View {
             Spacer()
         }
         .customBackChevronButton()
-        .padding(.horizontal, Layout.horizontalPadding)
+        .padding(.horizontal)
         .navigationTitle("Информация о перевозчике")
         .navigationBarTitleDisplayMode(.inline)
     }
