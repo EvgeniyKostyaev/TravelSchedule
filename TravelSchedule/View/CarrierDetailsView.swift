@@ -14,10 +14,9 @@ private enum Layout {
     static let detailsTopPadding: CGFloat = 16
     static let detailsBlockPadding: CGFloat = 16
     static let titleFontSize: CGFloat = 24
-    static let labelFontSize: CGFloat = 24
-    static let valueFontSize: CGFloat = 17
-    static let rowSpacing: CGFloat = 16
-    static let valuesSpacing: CGFloat = 8
+    static let labelFontSize: CGFloat = 17
+    static let valueFontSize: CGFloat = 12
+    static let rowSpacing: CGFloat = 30
     static let fallbackLogoFontSize: CGFloat = 56
     static let logoCornerRadius: CGFloat = 12
 }
@@ -49,13 +48,13 @@ struct CarrierDetailsView: View {
             .clipped()
             .clipShape(RoundedRectangle(cornerRadius: Layout.logoCornerRadius, style: .continuous))
             .padding(.top, Layout.sectionTopPadding)
-
+            
             VStack(alignment: .leading, spacing: Layout.rowSpacing) {
                 Text(option.carrierName)
                     .font(.system(size: Layout.titleFontSize, weight: .bold))
                     .foregroundStyle(Color.customBlack)
 
-                VStack(alignment: .leading, spacing: Layout.valuesSpacing) {
+                VStack(alignment: .leading, spacing: .zero) {
                     Text("E-mail")
                         .font(.system(size: Layout.labelFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlack)
@@ -65,7 +64,7 @@ struct CarrierDetailsView: View {
                         .foregroundStyle(Color.customBlue)
                 }
 
-                VStack(alignment: .leading, spacing: Layout.valuesSpacing) {
+                VStack(alignment: .leading, spacing: .zero) {
                     Text("Телефон")
                         .font(.system(size: Layout.labelFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlack)
@@ -75,8 +74,7 @@ struct CarrierDetailsView: View {
                         .foregroundStyle(Color.customBlue)
                 }
             }
-            .padding(Layout.detailsBlockPadding)
-            .padding(.top, Layout.detailsTopPadding)
+            .padding(.top)
 
             Spacer()
         }
