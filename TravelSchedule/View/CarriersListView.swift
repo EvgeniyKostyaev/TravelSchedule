@@ -44,7 +44,6 @@ private enum Layout {
     static let listRowInsetTop: CGFloat = 0
     static let buttonLabelSpacing: CGFloat = 6
     static let buttonFontSize: CGFloat = 17
-    static let backButtonPadding: CGFloat = 8
 }
 
 struct CarriersListView: View {
@@ -67,7 +66,6 @@ struct CarriersListView: View {
         }
     }
     
-    @Environment(\.dismiss) private var dismiss
     @State private var path = NavigationPath()
     @State private var filters = FiltersState()
     
@@ -237,17 +235,7 @@ struct CarriersListView: View {
                 .padding(.horizontal, Layout.horizontalPadding)
                 .padding(.bottom, Layout.horizontalPadding)
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(Color.customBlack)
-                    }
-                    .padding(Layout.backButtonPadding)
-                }
-            }
+            .customBackChevronButton()
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .filters:

@@ -7,13 +7,7 @@
 
 import SwiftUI
 
-private enum Layout {
-    static let backButtonPadding: CGFloat = 8
-}
-
 struct StationsListView: View {
-    @Environment(\.dismiss) private var dismiss
-    
     private let city: String
     private let onSelect: (String) -> Void
     
@@ -57,18 +51,7 @@ struct StationsListView: View {
             items: stations,
             onSelect: onSelect
         )
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(Color.customBlack)
-                }
-                .padding(Layout.backButtonPadding)
-            }
-        }
+        .customBackChevronButton()
     }
 }
 

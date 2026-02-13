@@ -19,12 +19,9 @@ private enum Layout {
     static let valueFontSize: CGFloat = 17
     static let rowSpacing: CGFloat = 16
     static let valuesSpacing: CGFloat = 8
-    static let backButtonPadding: CGFloat = 8
 }
 
 struct CarrierDetailsView: View {
-    @Environment(\.dismiss) private var dismiss
-
     let option: CarrierOption
 
     var body: some View {
@@ -70,18 +67,7 @@ struct CarrierDetailsView: View {
 
             Spacer()
         }
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(Color.customBlack)
-                }
-                .padding(Layout.backButtonPadding)
-            }
-        }
+        .customBackChevronButton()
         .padding(.horizontal, Layout.horizontalPadding)
         .navigationTitle("Информация о перевозчике")
         .navigationBarTitleDisplayMode(.inline)
