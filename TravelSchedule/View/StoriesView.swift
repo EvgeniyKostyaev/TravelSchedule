@@ -383,13 +383,11 @@ struct CloseButton: View {
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: "xmark")
-                .font(.system(size: StoryLayout.closeButtonIconSize, weight: .semibold))
-                .foregroundStyle(Color.customBlack)
+            Image(.closeButton)
                 .padding(StoryLayout.closeButtonPadding)
-                .background(Color.customWhite.opacity(0.9))
                 .clipShape(Circle())
         }
+        .frame(width: 30, height: 30)
     }
 }
 
