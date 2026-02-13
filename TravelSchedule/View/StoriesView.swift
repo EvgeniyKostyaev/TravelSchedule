@@ -14,6 +14,7 @@ private enum StoryLayout {
     static let stripItemSpacing: CGFloat = 12
     static let stripItemCornerRadius: CGFloat = 16
     static let stripHorizontalPadding: CGFloat = 0
+    static let stripTrailingInset: CGFloat = 16
     static let stripBorderWidth: CGFloat = 4
     static let stripTitleFontSize: CGFloat = 15
     static let stripTitleBottomPadding: CGFloat = 8
@@ -147,7 +148,7 @@ struct StoriesStripView: View {
                         .clipShape(RoundedRectangle(cornerRadius: StoryLayout.stripItemCornerRadius, style: .continuous))
                         .overlay(
                             RoundedRectangle(cornerRadius: StoryLayout.stripItemCornerRadius, style: .continuous)
-                                .stroke(
+                                .strokeBorder(
                                     viewedStoryIDs.contains(story.id) ? Color.clear : Color.customBlue,
                                     lineWidth: StoryLayout.stripBorderWidth
                                 )
@@ -157,6 +158,7 @@ struct StoriesStripView: View {
                 }
             }
             .padding(.horizontal, StoryLayout.stripHorizontalPadding)
+            .padding(.trailing, StoryLayout.stripTrailingInset)
         }
     }
 }

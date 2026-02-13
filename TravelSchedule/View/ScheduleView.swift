@@ -30,6 +30,7 @@ private enum Layout {
     static let searchButtonWidth: CGFloat = 150
     static let searchButtonHeight: CGFloat = 60
     static let dismissAnimationDuration: CGFloat = 0.2
+    static let storiesBottomPadding: CGFloat = 24
 }
 
 struct ScheduleView: View {
@@ -54,6 +55,8 @@ struct ScheduleView: View {
                 isStoriesPresented = true
             }
             .frame(height: Layout.storiesHeight)
+            .padding(.trailing, -Layout.screenPadding)
+            .padding(.bottom, Layout.storiesBottomPadding)
             
             HStack(spacing: Layout.cardSpacing) {
                 VStack(alignment: .leading, spacing: Layout.textFieldStackSpacing) {
