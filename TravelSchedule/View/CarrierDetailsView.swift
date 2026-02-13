@@ -11,7 +11,6 @@ private enum Layout {
     static let horizontalPadding: CGFloat = 16
     static let sectionTopPadding: CGFloat = 16
     static let logoHeight: CGFloat = 104
-    static let logoFontSize: CGFloat = 56
     static let detailsTopPadding: CGFloat = 16
     static let detailsBlockPadding: CGFloat = 16
     static let titleFontSize: CGFloat = 24
@@ -19,6 +18,8 @@ private enum Layout {
     static let valueFontSize: CGFloat = 17
     static let rowSpacing: CGFloat = 16
     static let valuesSpacing: CGFloat = 8
+    static let fallbackLogoFontSize: CGFloat = 56
+    static let logoCornerRadius: CGFloat = 12
 }
 
 struct CarrierDetailsView: View {
@@ -27,14 +28,26 @@ struct CarrierDetailsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack {
-                Rectangle()
+                RoundedRectangle(cornerRadius: Layout.logoCornerRadius, style: .continuous)
                     .fill(Color.customWhite)
-                Image(systemName: "tram.fill")
-                    .font(.system(size: Layout.logoFontSize, weight: .bold))
-                    .foregroundStyle(Color.customRed)
+                if let logoURL = option.logoURL {
+                    AsyncImage(url: logoURL) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        ProgressView()
+                    }
+                } else {
+                    Image(systemName: "tram.fill")
+                        .font(.system(size: Layout.fallbackLogoFontSize, weight: .bold))
+                        .foregroundStyle(Color.customRed)
+                }
             }
             .frame(maxWidth: .infinity)
             .frame(height: Layout.logoHeight)
+            .clipped()
+            .clipShape(RoundedRectangle(cornerRadius: Layout.logoCornerRadius, style: .continuous))
             .padding(.top, Layout.sectionTopPadding)
 
             VStack(alignment: .leading, spacing: Layout.rowSpacing) {
@@ -87,6 +100,7 @@ struct CarrierDetailsView: View {
                 durationLabel: "20 часов",
                 hasTransfers: true,
                 timeSlot: .night,
+                logoURL: URL(string: "https://picsum.photos/seed/rzd-details/220/120"),
                 email: "i.lozgkina@yandex.ru",
                 phone: "+7 (904) 329-27-71"
             )

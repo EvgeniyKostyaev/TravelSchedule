@@ -18,6 +18,7 @@ struct CarrierOption: Identifiable, Hashable {
     let durationLabel: String
     let hasTransfers: Bool
     let timeSlot: TimeSlot
+    let logoURL: URL?
     let email: String
     let phone: String
 }
@@ -87,6 +88,7 @@ struct CarriersListView: View {
             durationLabel: "20 часов",
             hasTransfers: true,
             timeSlot: .night,
+            logoURL: URL(string: "https://picsum.photos/seed/rzd/100/100"),
             email: "info@rzd.ru",
             phone: "+7 (904) 329-27-71"
         ),
@@ -100,6 +102,7 @@ struct CarriersListView: View {
             durationLabel: "9 часов",
             hasTransfers: false,
             timeSlot: .night,
+            logoURL: URL(string: "https://picsum.photos/seed/fk/100/100"),
             email: "support@fk.ru",
             phone: "+7 (812) 555-12-34"
         ),
@@ -113,6 +116,7 @@ struct CarriersListView: View {
             durationLabel: "9 часов",
             hasTransfers: false,
             timeSlot: .day,
+            logoURL: URL(string: "https://picsum.photos/seed/ural/100/100"),
             email: "contact@ural-log.ru",
             phone: "+7 (343) 777-45-67"
         ),
@@ -126,6 +130,7 @@ struct CarriersListView: View {
             durationLabel: "20 часов",
             hasTransfers: true,
             timeSlot: .night,
+            logoURL: URL(string: "https://picsum.photos/seed/rzd2/100/100"),
             email: "info@rzd.ru",
             phone: "+7 (904) 329-27-71"
         ),
@@ -139,6 +144,7 @@ struct CarriersListView: View {
             durationLabel: "9 часов",
             hasTransfers: false,
             timeSlot: .night,
+            logoURL: URL(string: "https://picsum.photos/seed/fk2/100/100"),
             email: "support@fk.ru",
             phone: "+7 (812) 555-12-34"
         ),
@@ -152,6 +158,7 @@ struct CarriersListView: View {
             durationLabel: "9 часов",
             hasTransfers: false,
             timeSlot: .day,
+            logoURL: URL(string: "https://picsum.photos/seed/ural2/100/100"),
             email: "contact@ural-log.ru",
             phone: "+7 (343) 777-45-67"
         )
