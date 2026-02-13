@@ -58,10 +58,10 @@ struct SettingsView: View {
             VStack(spacing: Layout.footerSpacing) {
                 Text("Приложение использует API «Яндекс.Расписания»")
                     .font(.system(size: Layout.footerFontSize, weight: .regular))
-                    .foregroundStyle(Color.customGray)
+                    .foregroundStyle(Color.customBlack)
                 Text("Версия 1.0 (beta)")
                     .font(.system(size: Layout.footerFontSize, weight: .regular))
-                    .foregroundStyle(Color.customGray)
+                    .foregroundStyle(Color.customBlack)
             }
             .padding(.bottom, Layout.footerBottomPadding)
         }
