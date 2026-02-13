@@ -10,7 +10,7 @@ import SwiftUI
 private enum Layout {
     static let rowHeight: CGFloat = 60
     static let horizontalPadding: CGFloat = 16
-    static let topPadding: CGFloat = 24
+    static let topPadding: CGFloat = 0
     static let settingsStackSpacing: CGFloat = 0
     static let footerSpacing: CGFloat = 8
     static let footerBottomPadding: CGFloat = 24
@@ -34,8 +34,6 @@ struct SettingsView: View {
             .frame(height: Layout.rowHeight)
             .padding(.horizontal, Layout.horizontalPadding)
 
-            Divider()
-
             Button {
                 isAgreementPresented = true
             } label: {
@@ -48,12 +46,12 @@ struct SettingsView: View {
                         .font(.system(size: Layout.chevronSize, weight: .semibold))
                         .foregroundStyle(Color.customBlack)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .frame(height: Layout.rowHeight)
                 .padding(.horizontal, Layout.horizontalPadding)
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-
-            Divider()
 
             Spacer()
 

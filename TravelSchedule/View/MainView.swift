@@ -17,17 +17,16 @@ struct MainView: View {
     @State private var selectedTab: Tab = .schedule
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Group {
-                switch selectedTab {
-                case .schedule:
-                    ScheduleView()
-                case .settings:
-                    SettingsView(isDarkThemeEnabled: $isDarkThemeEnabled)
-                }
+        Group {
+            switch selectedTab {
+            case .schedule:
+                ScheduleView()
+            case .settings:
+                SettingsView(isDarkThemeEnabled: $isDarkThemeEnabled)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .safeAreaInset(edge: .bottom) {
             BottomTabBarView(selectedTab: $selectedTab)
         }
         .ignoresSafeArea(.keyboard)
