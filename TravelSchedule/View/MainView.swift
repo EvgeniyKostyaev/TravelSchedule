@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  TravelSchedule
 //
 //  Created by Evgeniy Kostyaev on 29.01.2026.
@@ -7,25 +7,29 @@
 
 import SwiftUI
 
-struct ContentView: View {
+enum Tab: Int {
+    case schedule
+    case settings
+}
+
+struct MainView: View {
+    @State private var selectedTab: Tab = .schedule
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ZStack(alignment: .bottom) {
+            Group {
+                switch selectedTab {
+                case .schedule:
+                    ScheduleView()
+                case .settings:
+                    SettingsView()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            BottomTabBarView(selectedTab: $selectedTab)
         }
-        .padding()
-        .onAppear {
-            testFetchStations()
-            testFetchRouteSegmentSchedules()
-            testFetchSchedule()
-            testFetchThreadStations()
-            testFetchNearestCity()
-            testFetchCarrier()
-            testFetchAllStations()
-            testFetchScheduleBannersData()
-        }
+        .ignoresSafeArea(.keyboard)
     }
     
     // MARK: - Helper methods
@@ -163,5 +167,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    MainView()
 }
