@@ -12,12 +12,24 @@ private enum Layout {
 }
 
 struct UserAgreementView: View {
+    @State private var isLoading: Bool = true
+    
+    private var agreementURL: URL? {
+        URL(string: Layout.agreementURLString)
+    }
+    
     var body: some View {
-        Group {
-            if let url = URL(string: Layout.agreementURLString) {
-                WebView(url: url)
-            } else {
-                ErrorStateView(errorState: .serverError)
+        ZStack {
+            Group {
+                if let url = agreementURL {
+                    WebView(url: url, isLoading: $isLoading)
+                } else {
+                    ErrorStateView(errorState: .serverError)
+                }
+            }
+            
+            if agreementURL != nil && isLoading {
+                ProgressView()
             }
         }
         .customBackChevronButton()
