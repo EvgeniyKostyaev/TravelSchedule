@@ -19,7 +19,7 @@ private enum Layout {
 
 struct CarrierDetailsView: View {
     let option: CarrierOption
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack {
@@ -49,29 +49,29 @@ struct CarrierDetailsView: View {
                 Text(option.carrierName)
                     .font(.system(size: Layout.titleFontSize, weight: .bold))
                     .foregroundStyle(Color.customBlack)
-
+                
                 VStack(alignment: .leading, spacing: .zero) {
                     Text("E-mail")
                         .font(.system(size: Layout.labelFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlack)
-
+                    
                     Text(option.email)
                         .font(.system(size: Layout.valueFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlue)
                 }
-
+                
                 VStack(alignment: .leading, spacing: .zero) {
                     Text("Телефон")
                         .font(.system(size: Layout.labelFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlack)
-
+                    
                     Text(option.phone)
                         .font(.system(size: Layout.valueFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlue)
                 }
             }
             .padding(.top)
-
+            
             Spacer()
         }
         .customBackChevronButton()
