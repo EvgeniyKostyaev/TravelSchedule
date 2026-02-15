@@ -1,5 +1,5 @@
 //
-//  BackChevronButtonModifier.swift
+//  NavigationBackButtonView.swift
 //  TravelSchedule
 //
 //  Created by Evgeniy Kostyaev on 13.02.2026.
@@ -11,7 +11,7 @@ private enum Layout {
     static let backButtonPadding: CGFloat = 8
 }
 
-private struct BackChevronButtonModifier: ViewModifier {
+private struct NavigationBackButtonView: ViewModifier {
     @Environment(\.dismiss) private var dismiss
 
     func body(content: Content) -> some View {
@@ -33,7 +33,7 @@ private struct BackChevronButtonModifier: ViewModifier {
 
 extension View {
     func customBackChevronButton() -> some View {
-        modifier(BackChevronButtonModifier())
+        modifier(NavigationBackButtonView())
     }
 }
 
