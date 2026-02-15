@@ -8,7 +8,6 @@
 import SwiftUI
 
 private enum Layout {
-    static let backButtonPadding: CGFloat = 8
     static let dismissAnimationDuration: CGFloat = 0.2
 }
 
@@ -31,17 +30,7 @@ struct CityStationSelectionFlowView: View {
             CitiesListView { selectedCity in
                 path.append(Route.stations(selectedCity))
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(Color.customBlack)
-                    }
-                    .padding(Layout.backButtonPadding)
-                }
-            }
+            .customNavigationBackButton()
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .stations(let city):

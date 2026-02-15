@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CarrierOption: Identifiable {
+struct CarrierOption: Identifiable, Hashable {
     let id = UUID()
     let carrierName: String
     let routeTitle: String
@@ -18,6 +18,9 @@ struct CarrierOption: Identifiable {
     let durationLabel: String
     let hasTransfers: Bool
     let timeSlot: TimeSlot
+    let logoURL: URL?
+    let email: String
+    let phone: String
 }
 
 enum TimeSlot: String, CaseIterable, Identifiable {
@@ -42,12 +45,12 @@ private enum Layout {
     static let listRowInsetTop: CGFloat = 0
     static let buttonLabelSpacing: CGFloat = 6
     static let buttonFontSize: CGFloat = 17
-    static let backButtonPadding: CGFloat = 8
 }
 
 struct CarriersListView: View {
     private enum Route: Hashable {
         case filters
+        case carrierDetails(CarrierOption)
     }
     
     enum TransfersFilter: String {
@@ -64,7 +67,6 @@ struct CarriersListView: View {
         }
     }
     
-    @Environment(\.dismiss) private var dismiss
     @State private var path = NavigationPath()
     @State private var filters = FiltersState()
     
@@ -85,7 +87,10 @@ struct CarriersListView: View {
             arrivalTime: "08:15",
             durationLabel: "20 часов",
             hasTransfers: true,
-            timeSlot: .night
+            timeSlot: .night,
+            logoURL: URL(string: "https://picsum.photos/seed/rzd/100/100"),
+            email: "info@rzd.ru",
+            phone: "+7 (904) 329-27-71"
         ),
         CarrierOption(
             carrierName: "ФК",
@@ -96,7 +101,10 @@ struct CarriersListView: View {
             arrivalTime: "09:00",
             durationLabel: "9 часов",
             hasTransfers: false,
-            timeSlot: .night
+            timeSlot: .night,
+            logoURL: URL(string: "https://picsum.photos/seed/fk/100/100"),
+            email: "support@fk.ru",
+            phone: "+7 (812) 555-12-34"
         ),
         CarrierOption(
             carrierName: "Урал логистика",
@@ -107,7 +115,10 @@ struct CarriersListView: View {
             arrivalTime: "21:00",
             durationLabel: "9 часов",
             hasTransfers: false,
-            timeSlot: .day
+            timeSlot: .day,
+            logoURL: URL(string: "https://picsum.photos/seed/ural/100/100"),
+            email: "contact@ural-log.ru",
+            phone: "+7 (343) 777-45-67"
         ),
         CarrierOption(
             carrierName: "РЖД",
@@ -118,7 +129,10 @@ struct CarriersListView: View {
             arrivalTime: "08:15",
             durationLabel: "20 часов",
             hasTransfers: true,
-            timeSlot: .night
+            timeSlot: .night,
+            logoURL: URL(string: "https://picsum.photos/seed/rzd2/100/100"),
+            email: "info@rzd.ru",
+            phone: "+7 (904) 329-27-71"
         ),
         CarrierOption(
             carrierName: "ФК",
@@ -129,7 +143,10 @@ struct CarriersListView: View {
             arrivalTime: "09:00",
             durationLabel: "9 часов",
             hasTransfers: false,
-            timeSlot: .night
+            timeSlot: .night,
+            logoURL: URL(string: "https://picsum.photos/seed/fk2/100/100"),
+            email: "support@fk.ru",
+            phone: "+7 (812) 555-12-34"
         ),
         CarrierOption(
             carrierName: "Урал логистика",
@@ -140,7 +157,10 @@ struct CarriersListView: View {
             arrivalTime: "21:00",
             durationLabel: "9 часов",
             hasTransfers: false,
-            timeSlot: .day
+            timeSlot: .day,
+            logoURL: URL(string: "https://picsum.photos/seed/ural2/100/100"),
+            email: "contact@ural-log.ru",
+            phone: "+7 (343) 777-45-67"
         )
     ]
     
@@ -181,16 +201,21 @@ struct CarriersListView: View {
                 } else {
                     List {
                         ForEach(filteredOptions) { option in
-                            CarrierCellView(option: option)
-                                .listRowInsets(
-                                    EdgeInsets(
-                                        top: Layout.listRowInsetTop,
-                                        leading: Layout.horizontalPadding,
-                                        bottom: Layout.cardSpacing,
-                                        trailing: Layout.horizontalPadding
-                                    )
+                            Button {
+                                path.append(Route.carrierDetails(option))
+                            } label: {
+                                CarrierCellView(option: option)
+                            }
+                            .buttonStyle(.plain)
+                            .listRowInsets(
+                                EdgeInsets(
+                                    top: Layout.listRowInsetTop,
+                                    leading: Layout.horizontalPadding,
+                                    bottom: Layout.cardSpacing,
+                                    trailing: Layout.horizontalPadding
                                 )
-                                .listRowSeparator(.hidden)
+                            )
+                            .listRowSeparator(.hidden)
                         }
                     }
                     .listStyle(.plain)
@@ -217,23 +242,15 @@ struct CarriersListView: View {
                 .padding(.horizontal, Layout.horizontalPadding)
                 .padding(.bottom, Layout.horizontalPadding)
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(Color.customBlack)
-                    }
-                    .padding(Layout.backButtonPadding)
-                }
-            }
+            .customNavigationBackButton()
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .filters:
                     FiltersView(filters: $filters) {
                         path.removeLast()
                     }
+                case .carrierDetails(let option):
+                    CarrierDetailsView(option: option)
                 }
             }
         }

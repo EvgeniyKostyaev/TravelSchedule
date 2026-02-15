@@ -13,23 +13,24 @@ enum Tab: Int {
 }
 
 struct MainView: View {
+    @AppStorage("isDarkThemeEnabled") private var isDarkThemeEnabled: Bool = false
     @State private var selectedTab: Tab = .schedule
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Group {
-                switch selectedTab {
-                case .schedule:
-                    ScheduleView()
-                case .settings:
-                    SettingsView()
-                }
+        Group {
+            switch selectedTab {
+            case .schedule:
+                ScheduleView()
+            case .settings:
+                SettingsView(isDarkThemeEnabled: $isDarkThemeEnabled)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .safeAreaInset(edge: .bottom) {
             BottomTabBarView(selectedTab: $selectedTab)
         }
         .ignoresSafeArea(.keyboard)
+        .preferredColorScheme(isDarkThemeEnabled ? .dark : .light)
     }
     
     // MARK: - Helper methods

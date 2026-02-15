@@ -99,7 +99,7 @@ struct SearchableListView: View {
             } else {
                 List {
                     ForEach(filteredItems, id: \.self) { item in
-                        SearchableCell(item: item) { item in
+                        SearchableCellView(item: item) { item in
                             onSelect(item)
                         }
                     }

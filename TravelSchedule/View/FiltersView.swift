@@ -20,14 +20,11 @@ private enum Layout {
     static let radioSize: CGFloat = 18
     static let transfersTopPadding: CGFloat = 4
     static let buttonLabelSpacing: CGFloat = 6
-    static let backButtonPadding: CGFloat = 8
 }
 
 struct FiltersView: View {
     @Binding var filters: CarriersListView.FiltersState
-    
-    @Environment(\.dismiss) private var dismiss
-    
+
     private let onApply: () -> Void
     
     init(filters: Binding<CarriersListView.FiltersState>, onApply: @escaping () -> Void) {
@@ -94,18 +91,7 @@ struct FiltersView: View {
             .padding(.horizontal, Layout.horizontalPadding)
             .padding(.bottom, Layout.horizontalPadding)
         }
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(Color.customBlack)
-                }
-                .padding(Layout.backButtonPadding)
-            }
-        }
+        .customNavigationBackButton()
     }
     
     private func toggle(_ slot: TimeSlot) {

@@ -1,5 +1,5 @@
 //
-//  SearchableCell.swift
+//  SearchableCellView.swift
 //  TravelSchedule
 //
 //  Created by Evgeniy Kostyaev on 11.02.2026.
@@ -16,7 +16,7 @@ private enum Layout {
     static let listRowInsetBottom: CGFloat = 0
 }
 
-struct SearchableCell: View {
+struct SearchableCellView: View {
     var item: String
     var onSelect: (String) -> Void
     
@@ -50,7 +50,7 @@ struct SearchableCell: View {
 }
 
 #Preview {
-    SearchableCell(item: "Москва", onSelect: { _ in
+    SearchableCellView(item: "Москва", onSelect: { _ in
         
     })
 }

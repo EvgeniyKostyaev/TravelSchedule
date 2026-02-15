@@ -14,9 +14,7 @@ enum ActiveField {
 
 private enum Layout {
     static let headerSpacing: CGFloat = 16
-    static let carouselSpacing: CGFloat = 16
-    static let carouselHeight: CGFloat = 144
-    static let carouselContainerHeight: CGFloat = 188
+    static let storiesHeight: CGFloat = 140
     static let cardSpacing: CGFloat = 16
     static let textFieldFontSize: CGFloat = 17
     static let textFieldHorizontalPadding: CGFloat = 16
@@ -32,24 +30,33 @@ private enum Layout {
     static let searchButtonWidth: CGFloat = 150
     static let searchButtonHeight: CGFloat = 60
     static let dismissAnimationDuration: CGFloat = 0.2
+    static let storiesBottomPadding: CGFloat = 24
 }
 
 struct ScheduleView: View {
+    private let stories: [Story] = Story.items
+    
     @State private var fromText: String = String()
     @State private var toText: String = String()
     @State private var activeField: ActiveField?
     @State private var isCitiesPresenting: Bool = false
     @State private var isCarriersPresented: Bool = false
+    @State private var viewedStoryIDs: Set<Int> = []
+    @State private var selectedStoryIndex: Int = 0
+    @State private var isStoriesPresented: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: Layout.headerSpacing) {
-            ZStack() {
-                LazyHStack(spacing: Layout.carouselSpacing) {
-                    
-                }
-                .frame(height: Layout.carouselHeight)
+            StoriesStripView(
+                stories: stories,
+                viewedStoryIDs: viewedStoryIDs
+            ) { index in
+                selectedStoryIndex = index
+                isStoriesPresented = true
             }
-            .frame(height: Layout.carouselContainerHeight)
+            .frame(height: Layout.storiesHeight)
+            .padding(.trailing, -Layout.screenPadding)
+            .padding(.bottom, Layout.storiesBottomPadding)
             
             HStack(spacing: Layout.cardSpacing) {
                 VStack(alignment: .leading, spacing: Layout.textFieldStackSpacing) {
@@ -151,6 +158,15 @@ struct ScheduleView: View {
         }
         .fullScreenCover(isPresented: $isCarriersPresented) {
             CarriersListView(fromText: fromText, toText: toText)
+        }
+        .fullScreenCover(isPresented: $isStoriesPresented) {
+            StoriesScreenView(
+                stories: stories,
+                viewedStoryIDs: $viewedStoryIDs,
+                initialStoryIndex: selectedStoryIndex
+            ) {
+                isStoriesPresented = false
+            }
         }
     }
 }

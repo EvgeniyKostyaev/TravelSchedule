@@ -17,10 +17,10 @@ private enum Layout {
     static let cardPadding: CGFloat = 12
     static let cardCornerRadius: CGFloat = 16
     static let iconCornerRadius: CGFloat = 12
-    static let iconFontSize: CGFloat = 18
     static let titleStackSpacing: CGFloat = 2
     static let timeStackSpacing: CGFloat = 8
     static let dividerHeight: CGFloat = 1
+    static let fallbackIconFontSize: CGFloat = 18
 }
 
 struct CarrierCellView: View {
@@ -32,9 +32,7 @@ struct CarrierCellView: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: Layout.iconCornerRadius, style: .continuous)
                         .fill(Color.customWhite)
-                    Image(systemName: "train.side.front.car")
-                        .font(.system(size: Layout.iconFontSize, weight: .bold))
-                        .foregroundStyle(Color.customRed)
+                    carrierIcon
                 }
                 .frame(width: Layout.iconSize, height: Layout.iconSize)
                 
@@ -85,6 +83,31 @@ struct CarrierCellView: View {
         .clipShape(RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous))
         
     }
+    
+    private var carrierIcon: some View {
+        Group {
+            if let logoURL = option.logoURL {
+                AsyncImage(url: logoURL) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    ProgressView()
+                }
+            } else {
+                Image(systemName: "train.side.front.car")
+                    .font(.system(size: Layout.fallbackIconFontSize, weight: .bold))
+                    .foregroundStyle(Color.customRed)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: Layout.iconCornerRadius,
+                style: .continuous
+            )
+        )
+    }
 }
 
 #Preview {
@@ -97,6 +120,9 @@ struct CarrierCellView: View {
         arrivalTime: "08:15",
         durationLabel: "20 часов",
         hasTransfers: true,
-        timeSlot: .night
+        timeSlot: .night,
+        logoURL: URL(string: "https://picsum.photos/seed/rzd-preview/100/100"),
+        email: "info@rzd.ru",
+        phone: "+7 (904) 329-27-71"
     ))
 }
