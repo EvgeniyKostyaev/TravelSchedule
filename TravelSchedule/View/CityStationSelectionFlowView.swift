@@ -30,7 +30,7 @@ struct CityStationSelectionFlowView: View {
             CitiesListView { selectedCity in
                 path.append(Route.stations(selectedCity))
             }
-            .customBackChevronButton()
+            .customNavigationBackButton()
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .stations(let city):

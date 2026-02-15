@@ -74,7 +74,7 @@ struct CarrierDetailsView: View {
             
             Spacer()
         }
-        .customBackChevronButton()
+        .customNavigationBackButton()
         .padding(.horizontal)
         .navigationTitle("Информация о перевозчике")
         .navigationBarTitleDisplayMode(.inline)

@@ -32,7 +32,7 @@ struct UserAgreementView: View {
                 ProgressView()
             }
         }
-        .customBackChevronButton()
+        .customNavigationBackButton()
         .navigationTitle("Пользовательское соглашение")
         .navigationBarTitleDisplayMode(.inline)
     }

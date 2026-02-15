@@ -11,7 +11,9 @@ private enum Layout {
     static let backButtonPadding: CGFloat = 8
 }
 
-private struct NavigationBackButtonView: ViewModifier {
+/// Полностью заменяет системную кнопку "Назад"
+/// и вручную добавляет кастомную кнопку с dismiss()
+private struct NavigationBackButtonViewModifier: ViewModifier {
     @Environment(\.dismiss) private var dismiss
 
     func body(content: Content) -> some View {
@@ -32,8 +34,8 @@ private struct NavigationBackButtonView: ViewModifier {
 }
 
 extension View {
-    func customBackChevronButton() -> some View {
-        modifier(NavigationBackButtonView())
+    func customNavigationBackButton() -> some View {
+        modifier(NavigationBackButtonViewModifier())
     }
 }
 

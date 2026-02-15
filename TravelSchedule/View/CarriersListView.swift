@@ -242,7 +242,7 @@ struct CarriersListView: View {
                 .padding(.horizontal, Layout.horizontalPadding)
                 .padding(.bottom, Layout.horizontalPadding)
             }
-            .customBackChevronButton()
+            .customNavigationBackButton()
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .filters:

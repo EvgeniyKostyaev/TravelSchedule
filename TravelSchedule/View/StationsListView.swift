@@ -51,7 +51,7 @@ struct StationsListView: View {
             items: stations,
             onSelect: onSelect
         )
-        .customBackChevronButton()
+        .customNavigationBackButton()
     }
 }
 

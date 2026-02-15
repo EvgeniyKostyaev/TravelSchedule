@@ -91,7 +91,7 @@ struct FiltersView: View {
             .padding(.horizontal, Layout.horizontalPadding)
             .padding(.bottom, Layout.horizontalPadding)
         }
-        .customBackChevronButton()
+        .customNavigationBackButton()
     }
     
     private func toggle(_ slot: TimeSlot) {
