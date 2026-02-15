@@ -32,23 +32,7 @@ struct CarrierCellView: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: Layout.iconCornerRadius, style: .continuous)
                         .fill(Color.customWhite)
-                    if let logoURL = option.logoURL {
-                        AsyncImage(url: logoURL) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .clipped()
-                                .clipShape(RoundedRectangle(cornerRadius: Layout.iconCornerRadius, style: .continuous))
-                        } placeholder: {
-                            ProgressView()
-                        }
-                    } else {
-                        Image(systemName: "train.side.front.car")
-                            .font(.system(size: Layout.fallbackIconFontSize, weight: .bold))
-                            .foregroundStyle(Color.customRed)
-                            .clipShape(RoundedRectangle(cornerRadius: Layout.iconCornerRadius, style: .continuous))
-                    }
+                    carrierIcon
                 }
                 .frame(width: Layout.iconSize, height: Layout.iconSize)
                 
@@ -98,6 +82,31 @@ struct CarrierCellView: View {
         .colorScheme(.light)
         .clipShape(RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous))
         
+    }
+    
+    private var carrierIcon: some View {
+        Group {
+            if let logoURL = option.logoURL {
+                AsyncImage(url: logoURL) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    ProgressView()
+                }
+            } else {
+                Image(systemName: "train.side.front.car")
+                    .font(.system(size: Layout.fallbackIconFontSize, weight: .bold))
+                    .foregroundStyle(Color.customRed)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipShape(
+            RoundedRectangle(
+                cornerRadius: Layout.iconCornerRadius,
+                style: .continuous
+            )
+        )
     }
 }
 
