@@ -20,12 +20,19 @@ private enum Layout {
 }
 
 struct SettingsView: View {
-    @Binding var isDarkThemeEnabled: Bool
+    @State var viewModel: SettingsViewModel
     @State private var isAgreementPresented: Bool = false
 
     var body: some View {
         VStack(spacing: Layout.settingsStackSpacing) {
-            Toggle(isOn: $isDarkThemeEnabled) {
+            Toggle(
+                isOn: Binding(
+                    get: { viewModel.isDarkThemeEnabled },
+                    set: { newValue in
+                        viewModel.send(.toggleDarkTheme(newValue))
+                    }
+                )
+            ) {
                 Text("Темная тема")
                     .font(.system(size: Layout.subtitleFontSize, weight: .regular))
                     .foregroundStyle(Color.customBlack)
@@ -66,7 +73,9 @@ struct SettingsView: View {
             .padding(.bottom, Layout.footerBottomPadding)
         }
         .padding(.top, Layout.topPadding)
-        .fullScreenCover(isPresented: $isAgreementPresented) {
+        .fullScreenCover(
+            isPresented: $isAgreementPresented
+        ) {
             NavigationStack {
                 UserAgreementView()
             }
@@ -75,5 +84,5 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView(isDarkThemeEnabled: .constant(false))
+    SettingsView(viewModel: SettingsViewModel())
 }
