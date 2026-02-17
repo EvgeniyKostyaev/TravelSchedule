@@ -22,6 +22,11 @@ struct CitiesListView: View {
             if viewModel.isLoading && viewModel.cities.isEmpty {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let errorKind = viewModel.errorKind, viewModel.cities.isEmpty {
+                ErrorStateView(
+                    errorState: errorKind == .noInternet ? .noInternet : .serverError
+                )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 SearchableListView(
                     title: "Выбор города",

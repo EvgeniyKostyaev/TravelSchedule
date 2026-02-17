@@ -11,7 +11,7 @@ import Foundation
 final class StationsListViewModel: ObservableObject {
     @Published private(set) var stations: [String] = []
     @Published private(set) var isLoading: Bool = false
-    @Published private(set) var errorMessage: String?
+    @Published private(set) var errorKind: NetworkErrorKind?
 
     private let city: String
     private let networkClient: CityStationSelectionDataProviderProtocol
@@ -30,13 +30,13 @@ final class StationsListViewModel: ObservableObject {
         }
 
         isLoading = true
-        errorMessage = nil
+        errorKind = nil
 
         do {
             let payload = try await networkClient.fetchCityStationsPayload()
             stations = payload.stationsByCity[city] ?? []
         } catch {
-            errorMessage = error.localizedDescription
+            errorKind = error.networkErrorKind
         }
 
         isLoading = false
