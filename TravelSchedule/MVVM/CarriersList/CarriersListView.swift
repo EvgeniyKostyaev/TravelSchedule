@@ -31,8 +31,15 @@ struct CarriersListView: View {
     @StateObject private var viewModel: CarriersListViewModel
     @State private var path = NavigationPath()
 
-    init(fromText: String, toText: String) {
-        _viewModel = StateObject(wrappedValue: CarriersListViewModel(fromText: fromText, toText: toText))
+    init(fromText: String, toText: String, fromCode: String, toCode: String) {
+        _viewModel = StateObject(
+            wrappedValue: CarriersListViewModel(
+                fromText: fromText,
+                toText: toText,
+                fromCode: fromCode,
+                toCode: toCode
+            )
+        )
     }
 
     var body: some View {
@@ -131,5 +138,10 @@ struct CarriersListView: View {
 }
 
 #Preview {
-    CarriersListView(fromText: "Москва (Ярославский вокзал)", toText: "Санкт Петербург (Балтийский вокзал)")
+    CarriersListView(
+        fromText: "Москва (Ярославский вокзал)",
+        toText: "Санкт Петербург (Балтийский вокзал)",
+        fromCode: "s9602492",
+        toCode: "s9600213"
+    )
 }

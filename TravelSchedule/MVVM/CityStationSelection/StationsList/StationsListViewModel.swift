@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 final class StationsListViewModel: ObservableObject {
-    @Published private(set) var stations: [String] = []
+    @Published private(set) var stations: [StationSelectionOption] = []
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var errorKind: NetworkErrorKind?
 

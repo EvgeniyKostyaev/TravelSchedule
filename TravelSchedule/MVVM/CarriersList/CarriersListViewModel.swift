@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 @MainActor
 final class CarriersListViewModel: ObservableObject {
@@ -17,6 +16,8 @@ final class CarriersListViewModel: ObservableObject {
 
     let fromText: String
     let toText: String
+    let fromCode: String
+    let toCode: String
 
     private let dataProvider: CarriersListDataProviderProtocol
 
@@ -45,10 +46,14 @@ final class CarriersListViewModel: ObservableObject {
     init(
         fromText: String,
         toText: String,
+        fromCode: String,
+        toCode: String,
         dataProvider: CarriersListDataProviderProtocol = CarriersListDataProvider.shared
     ) {
         self.fromText = fromText
         self.toText = toText
+        self.fromCode = fromCode
+        self.toCode = toCode
         self.dataProvider = dataProvider
     }
 
@@ -61,7 +66,12 @@ final class CarriersListViewModel: ObservableObject {
         errorKind = nil
 
         do {
-            options = try await dataProvider.fetchCarrierOptions(from: fromText, to: toText)
+            options = try await dataProvider.fetchCarrierOptions(
+                fromCode: fromCode,
+                toCode: toCode,
+                fromText: fromText,
+                toText: toText
+            )
         } catch {
             errorKind = error.networkErrorKind
         }

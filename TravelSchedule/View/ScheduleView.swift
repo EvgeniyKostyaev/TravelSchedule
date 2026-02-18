@@ -38,6 +38,8 @@ struct ScheduleView: View {
     
     @State private var fromText: String = String()
     @State private var toText: String = String()
+    @State private var fromCode: String = String()
+    @State private var toCode: String = String()
     @State private var activeField: ActiveField?
     @State private var isCitiesPresenting: Bool = false
     @State private var isCarriersPresented: Bool = false
@@ -97,6 +99,10 @@ struct ScheduleView: View {
                     let temp = fromText
                     fromText = toText
                     toText = temp
+
+                    let tempCode = fromCode
+                    fromCode = toCode
+                    toCode = tempCode
                 } label: {
                     Image(.swapButton)
                         .font(.system(size: Layout.swapIconSize, weight: .semibold))
@@ -113,7 +119,7 @@ struct ScheduleView: View {
                 RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous)
             )
             
-            if (!fromText.isEmpty && !toText.isEmpty) {
+            if !fromCode.isEmpty && !toCode.isEmpty {
                 HStack {
                     Spacer()
                     
@@ -141,12 +147,14 @@ struct ScheduleView: View {
         .padding(Layout.screenPadding)
         .fullScreenCover(isPresented: $isCitiesPresenting) {
             CityStationSelectionFlowView { city, station in
-                let value = "\(city) (\(station))"
+                let value = "\(city) (\(station.title))"
                 switch activeField {
                 case .from:
                     fromText = value
+                    fromCode = station.code
                 case .to:
                     toText = value
+                    toCode = station.code
                 case .none:
                     break
                 }
@@ -157,7 +165,12 @@ struct ScheduleView: View {
             }
         }
         .fullScreenCover(isPresented: $isCarriersPresented) {
-            CarriersListView(fromText: fromText, toText: toText)
+            CarriersListView(
+                fromText: fromText,
+                toText: toText,
+                fromCode: fromCode,
+                toCode: toCode
+            )
         }
         .fullScreenCover(isPresented: $isStoriesPresented) {
             StoriesScreenView(

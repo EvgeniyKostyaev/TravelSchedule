@@ -1,5 +1,5 @@
 //
-//  CityStationSelectionNetworkClient.swift
+//  CityStationSelectionDataProvider.swift
 //  TravelSchedule
 //
 //  Created by Evgeniy Kostyaev on 13.02.2026.
@@ -7,9 +7,14 @@
 
 import Foundation
 
+struct StationSelectionOption: Hashable, Sendable {
+    let title: String
+    let code: String
+}
+
 struct CityStationsPayload: Sendable {
     let cities: [String]
-    let stationsByCity: [String: [String]]
+    let stationsByCity: [String: [StationSelectionOption]]
 }
 
 protocol CityStationSelectionDataProviderProtocol: Sendable {
@@ -31,47 +36,85 @@ actor CityStationSelectionDataProvider: CityStationSelectionDataProviderProtocol
             return cachedPayload
         }
 
-        let allStations = try await stationsListService.getAllStations()
+        let rawData = try await stationsListService.getAllStationsRawData()
+        let jsonObject = try JSONSerialization.jsonObject(with: rawData)
 
-        var stationsByCity: [String: [String]] = [:]
+        guard let root = jsonObject as? [String: Any],
+              let countries = root["countries"] as? [[String: Any]] else {
+            return CityStationsPayload(cities: [], stationsByCity: [:])
+        }
 
-        for country in allStations.countries ?? [] {
-            for region in country.regions ?? [] {
-                for settlement in region.settlements ?? [] {
-                    guard let cityName = settlement.title?.trimmingCharacters(in: .whitespacesAndNewlines),
+        var stationsByCity: [String: [StationSelectionOption]] = [:]
+
+        for country in countries {
+            let regions = country["regions"] as? [[String: Any]] ?? []
+            for region in regions {
+                let settlements = region["settlements"] as? [[String: Any]] ?? []
+                for settlement in settlements {
+                    guard let cityName = (settlement["title"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
                           !cityName.isEmpty else {
                         continue
                     }
 
-                    let stationTitles = (settlement.stations ?? [])
-                        .compactMap { station in
-                            station.title?.trimmingCharacters(in: .whitespacesAndNewlines)
+                    let stations = settlement["stations"] as? [[String: Any]] ?? []
+                    let stationOptions: [StationSelectionOption] = stations.compactMap { station in
+                        guard let stationTitle = (station["title"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
+                              !stationTitle.isEmpty else {
+                            return nil
                         }
-                        .filter { !$0.isEmpty }
 
-                    guard !stationTitles.isEmpty else {
+                        let stationCode = Self.extractStationCode(station: station)
+                        guard !stationCode.isEmpty else {
+                            return nil
+                        }
+
+                        return StationSelectionOption(title: stationTitle, code: stationCode)
+                    }
+
+                    guard !stationOptions.isEmpty else {
                         continue
                     }
 
-                    stationsByCity[cityName, default: []].append(contentsOf: stationTitles)
+                    stationsByCity[cityName, default: []].append(contentsOf: stationOptions)
                 }
             }
         }
 
-        let normalizedStationsByCity = stationsByCity
-            .mapValues { stations in
-                Array(Set(stations)).sorted { lhs, rhs in
-                    lhs.localizedCaseInsensitiveCompare(rhs) == .orderedAscending
+        let normalizedStationsByCity = stationsByCity.mapValues { stations in
+            var uniqueByCode: [String: StationSelectionOption] = [:]
+            for station in stations {
+                if uniqueByCode[station.code] == nil {
+                    uniqueByCode[station.code] = station
                 }
             }
 
-        let cities = normalizedStationsByCity.keys.sorted { lhs, rhs in
-            lhs.localizedCaseInsensitiveCompare(rhs) == .orderedAscending
+            return uniqueByCode.values.sorted {
+                $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
+            }
+        }
+
+        let cities = normalizedStationsByCity.keys.sorted {
+            $0.localizedCaseInsensitiveCompare($1) == .orderedAscending
         }
 
         let payload = CityStationsPayload(cities: cities, stationsByCity: normalizedStationsByCity)
         cachedPayload = payload
-
         return payload
+    }
+}
+
+private extension CityStationSelectionDataProvider {
+    static func extractStationCode(station: [String: Any]) -> String {
+        if let code = (station["code"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines), !code.isEmpty {
+            return code
+        }
+
+        if let codes = station["codes"] as? [String: Any] {
+            if let yandexCode = (codes["yandex_code"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines), !yandexCode.isEmpty {
+                return yandexCode
+            }
+        }
+
+        return String()
     }
 }

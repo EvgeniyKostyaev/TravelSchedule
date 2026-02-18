@@ -11,11 +11,11 @@ import SwiftUI
 struct StationsListView: View {
     @StateObject private var viewModel: StationsListViewModel
     
-    private let onSelect: (String) -> Void
+    private let onSelect: (StationSelectionOption) -> Void
 
     init(
         city: String,
-        onSelect: @escaping (String) -> Void = { _ in }
+        onSelect: @escaping (StationSelectionOption) -> Void = { _ in }
     ) {
         _viewModel = StateObject(wrappedValue: StationsListViewModel(city: city))
         self.onSelect = onSelect
@@ -36,8 +36,8 @@ struct StationsListView: View {
                     title: "Выбор станции",
                     placeholder: "Введите запрос",
                     emptyTitle: "Вокзал не найден",
-                    items: viewModel.stations,
-                    onSelect: onSelect
+                    items: viewModel.stations.map(\.title),
+                    onSelect: didSelectStation
                 )
             }
         }
@@ -45,6 +45,14 @@ struct StationsListView: View {
         .task {
             await viewModel.load()
         }
+    }
+
+    private func didSelectStation(_ stationTitle: String) {
+        guard let station = viewModel.stations.first(where: { $0.title == stationTitle }) else {
+            return
+        }
+
+        onSelect(station)
     }
 }
 
