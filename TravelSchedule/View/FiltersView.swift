@@ -23,11 +23,11 @@ private enum Layout {
 }
 
 struct FiltersView: View {
-    @Binding var filters: CarriersListView.FiltersState
+    @Binding var filters: CarrierFiltersState
 
     private let onApply: () -> Void
     
-    init(filters: Binding<CarriersListView.FiltersState>, onApply: @escaping () -> Void) {
+    init(filters: Binding<CarrierFiltersState>, onApply: @escaping () -> Void) {
         self._filters = filters
         self.onApply = onApply
     }
@@ -102,7 +102,7 @@ struct FiltersView: View {
         }
     }
     
-    private func radioRow(title: String, value: CarriersListView.TransfersFilter) -> some View {
+    private func radioRow(title: String, value: TransfersFilter) -> some View {
         Button {
             if filters.transfers == value {
                 filters.transfers = nil
