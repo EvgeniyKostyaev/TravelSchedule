@@ -13,7 +13,7 @@ enum Tab: Int {
 }
 
 struct MainView: View {
-    @State private var settingsViewModel: SettingsViewModel = SettingsViewModel()
+    @StateObject private var settingsViewModel: SettingsViewModel = SettingsViewModel()
     @State private var selectedTab: Tab = .schedule
     
     var body: some View {

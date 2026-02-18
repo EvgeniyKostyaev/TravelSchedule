@@ -14,14 +14,14 @@ final class StationsListViewModel: ObservableObject {
     @Published private(set) var errorKind: NetworkErrorKind?
 
     private let city: String
-    private let networkClient: CityStationSelectionDataProviderProtocol
+    private let dataProvider: CityStationSelectionDataProviderProtocol
 
     init(
         city: String,
-        networkClient: CityStationSelectionDataProviderProtocol = CityStationSelectionDataProvider.shared
+        dataProvider: CityStationSelectionDataProviderProtocol = CityStationSelectionDataProvider.shared
     ) {
         self.city = city
-        self.networkClient = networkClient
+        self.dataProvider = dataProvider
     }
 
     func load() async {
@@ -33,7 +33,7 @@ final class StationsListViewModel: ObservableObject {
         errorKind = nil
 
         do {
-            let payload = try await networkClient.fetchCityStationsPayload()
+            let payload = try await dataProvider.fetchCityStationsPayload()
             stations = payload.stationsByCity[city] ?? []
         } catch {
             errorKind = error.networkErrorKind

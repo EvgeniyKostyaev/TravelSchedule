@@ -9,8 +9,8 @@ import Foundation
 import Observation
 import Combine
 
-@Observable
-final class SettingsViewModel {
+@MainActor
+final class SettingsViewModel: ObservableObject {
     enum Action {
         case load
         case toggleDarkTheme(Bool)
@@ -20,14 +20,19 @@ final class SettingsViewModel {
         static let darkThemeKey: String = "isDarkThemeEnabled"
     }
 
-    var isDarkThemeEnabled: Bool = false
+    @Published private(set) var isDarkThemeEnabled: Bool = false
+    @Published private(set) var copyrightText: String = String()
+    @Published private(set) var isLoading: Bool = false
 
     private let userDefaults: UserDefaults
+    private let dataProvider: SettingsDataProviderProtocol
     private let actions = PassthroughSubject<Action, Never>()
     private var cancellables = Set<AnyCancellable>()
 
-    init(userDefaults: UserDefaults = .standard) {
+    init(userDefaults: UserDefaults = .standard,
+         dataProvider: SettingsDataProviderProtocol = SettingsDataProvider.shared) {
         self.userDefaults = userDefaults
+        self.dataProvider = dataProvider
         bindActions()
         send(.load)
     }
@@ -42,6 +47,24 @@ final class SettingsViewModel {
 
     func saveThemePreference() {
         userDefaults.set(isDarkThemeEnabled, forKey: Constants.darkThemeKey)
+    }
+    
+    func load() async {
+        guard copyrightText.isEmpty else {
+            return
+        }
+
+        isLoading = true
+
+        do {
+            let payload = try await dataProvider.fetchSettingsPayload()
+            copyrightText = payload.text
+        } catch {
+            print(error.networkErrorKind)
+            copyrightText = String()
+        }
+
+        isLoading = false
     }
 
     private func bindActions() {

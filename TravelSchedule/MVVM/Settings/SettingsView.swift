@@ -20,65 +20,76 @@ private enum Layout {
 }
 
 struct SettingsView: View {
-    @State var viewModel: SettingsViewModel
+    @StateObject var viewModel: SettingsViewModel
     @State private var isAgreementPresented: Bool = false
 
     var body: some View {
-        VStack(spacing: Layout.settingsStackSpacing) {
-            Toggle(
-                isOn: Binding(
-                    get: { viewModel.isDarkThemeEnabled },
-                    set: { newValue in
-                        viewModel.send(.toggleDarkTheme(newValue))
+        Group {
+            
+            if (viewModel.isLoading && viewModel.copyrightText.isEmpty) {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                VStack(spacing: Layout.settingsStackSpacing) {
+                    Toggle(
+                        isOn: Binding(
+                            get: { viewModel.isDarkThemeEnabled },
+                            set: { newValue in
+                                viewModel.send(.toggleDarkTheme(newValue))
+                            }
+                        )
+                    ) {
+                        Text("Темная тема")
+                            .font(.system(size: Layout.subtitleFontSize, weight: .regular))
+                            .foregroundStyle(Color.customBlack)
                     }
-                )
-            ) {
-                Text("Темная тема")
-                    .font(.system(size: Layout.subtitleFontSize, weight: .regular))
-                    .foregroundStyle(Color.customBlack)
-            }
-            .tint(Color.customBlue)
-            .frame(height: Layout.rowHeight)
-            .padding(.horizontal, Layout.horizontalPadding)
+                    .tint(Color.customBlue)
+                    .frame(height: Layout.rowHeight)
+                    .padding(.horizontal, Layout.horizontalPadding)
 
-            Button {
-                isAgreementPresented = true
-            } label: {
-                HStack {
-                    Text("Пользовательское соглашение")
-                        .font(.system(size: Layout.subtitleFontSize, weight: .regular))
-                        .foregroundStyle(Color.customBlack)
+                    Button {
+                        isAgreementPresented = true
+                    } label: {
+                        HStack {
+                            Text("Пользовательское соглашение")
+                                .font(.system(size: Layout.subtitleFontSize, weight: .regular))
+                                .foregroundStyle(Color.customBlack)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: Layout.chevronSize, weight: .semibold))
+                                .foregroundStyle(Color.customBlack)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(height: Layout.rowHeight)
+                        .padding(.horizontal, Layout.horizontalPadding)
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+
                     Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: Layout.chevronSize, weight: .semibold))
-                        .foregroundStyle(Color.customBlack)
+
+                    VStack(spacing: Layout.footerSpacing) {
+                        Text(!viewModel.copyrightText.isEmpty ? viewModel.copyrightText : "Приложение использует API «Яндекс.Расписания»")
+                            .font(.system(size: Layout.footerFontSize, weight: .regular))
+                            .foregroundStyle(Color.customBlack)
+                        Text("Версия 1.0 (beta)")
+                            .font(.system(size: Layout.footerFontSize, weight: .regular))
+                            .foregroundStyle(Color.customBlack)
+                    }
+                    .padding(.bottom, Layout.footerBottomPadding)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(height: Layout.rowHeight)
-                .padding(.horizontal, Layout.horizontalPadding)
-                .contentShape(Rectangle())
+                .padding(.top, Layout.topPadding)
+                .fullScreenCover(
+                    isPresented: $isAgreementPresented
+                ) {
+                    NavigationStack {
+                        UserAgreementView()
+                    }
+                }
             }
-            .buttonStyle(.plain)
-
-            Spacer()
-
-            VStack(spacing: Layout.footerSpacing) {
-                Text("Приложение использует API «Яндекс.Расписания»")
-                    .font(.system(size: Layout.footerFontSize, weight: .regular))
-                    .foregroundStyle(Color.customBlack)
-                Text("Версия 1.0 (beta)")
-                    .font(.system(size: Layout.footerFontSize, weight: .regular))
-                    .foregroundStyle(Color.customBlack)
-            }
-            .padding(.bottom, Layout.footerBottomPadding)
         }
-        .padding(.top, Layout.topPadding)
-        .fullScreenCover(
-            isPresented: $isAgreementPresented
-        ) {
-            NavigationStack {
-                UserAgreementView()
-            }
+        .task {
+            await viewModel.load()
         }
     }
 }
