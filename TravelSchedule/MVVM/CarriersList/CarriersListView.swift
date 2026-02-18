@@ -53,29 +53,31 @@ struct CarriersListView: View {
 
                 contentView
 
-                Button {
-                    path.append(Route.filters)
-                } label: {
-                    HStack(spacing: Layout.buttonLabelSpacing) {
-                        Text("Уточнить время")
-                            .font(.system(size: Layout.buttonFontSize, weight: .bold))
-                            .foregroundStyle(Color.customWhite)
-                            .colorScheme(.light)
+                if shouldShowFiltersButton {
+                    Button {
+                        path.append(Route.filters)
+                    } label: {
+                        HStack(spacing: Layout.buttonLabelSpacing) {
+                            Text("Уточнить время")
+                                .font(.system(size: Layout.buttonFontSize, weight: .bold))
+                                .foregroundStyle(Color.customWhite)
+                                .colorScheme(.light)
 
-                        if viewModel.filters.isActive {
-                            Circle()
-                                .fill(Color.customRed)
-                                .frame(width: Layout.buttonDotSize, height: Layout.buttonDotSize)
+                            if viewModel.filters.isActive {
+                                Circle()
+                                    .fill(Color.customRed)
+                                    .frame(width: Layout.buttonDotSize, height: Layout.buttonDotSize)
+                            }
                         }
+                        .frame(maxWidth: .infinity, minHeight: Layout.buttonHeight)
                     }
-                    .frame(maxWidth: .infinity, minHeight: Layout.buttonHeight)
+                    .background(Color.customBlue)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: Layout.buttonCornerRadius, style: .continuous)
+                    )
+                    .padding(.horizontal, Layout.horizontalPadding)
+                    .padding(.bottom, Layout.horizontalPadding)
                 }
-                .background(Color.customBlue)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: Layout.buttonCornerRadius, style: .continuous)
-                )
-                .padding(.horizontal, Layout.horizontalPadding)
-                .padding(.bottom, Layout.horizontalPadding)
             }
             .customNavigationBackButton()
             .navigationDestination(for: Route.self) { route in
@@ -92,6 +94,10 @@ struct CarriersListView: View {
                 await viewModel.load()
             }
         }
+    }
+
+    private var shouldShowFiltersButton: Bool {
+        viewModel.errorKind == nil && !viewModel.options.isEmpty
     }
 
     @ViewBuilder
