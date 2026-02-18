@@ -33,22 +33,28 @@ actor CarriersListDataProvider: CarriersListDataProviderProtocol {
     ) async throws -> [CarrierOption] {
         let schedules = try await searchService.getScheduleBetweenStations(from: fromCode, to: toCode)
         let routeTitle = "\(fromText) → \(toText)"
+        let requestDateLabel = Self.todayDateLabel()
 
         return (schedules.segments ?? []).map { segment in
             let carrier = segment.thread?.carrier
-            let departure = Self.parseDate(segment.departure)
-            let arrival = Self.parseDate(segment.arrival)
+            let departure = Self.parseDateFlexible(segment.departure)
+            let arrival = Self.parseDateFlexible(segment.arrival)
+            let durationSeconds = Int(segment.duration ?? 0)
 
             return CarrierOption(
                 carrierName: carrier?.title ?? "Перевозчик",
                 routeTitle: routeTitle,
                 routeNote: String(),
-                dateLabel: Self.formatDate(departure),
-                departureTime: Self.formatTime(departure),
-                arrivalTime: Self.formatTime(arrival),
-                durationLabel: Self.formatDuration(departure: departure, arrival: arrival),
+                dateLabel: Self.formatDate(
+                    from: segment.departure,
+                    fallbackDate: departure,
+                    defaultLabel: requestDateLabel
+                ),
+                departureTime: Self.formatTime(from: segment.departure, fallbackDate: departure),
+                arrivalTime: Self.formatTime(from: segment.arrival, fallbackDate: arrival),
+                durationLabel: Self.formatDuration(seconds: durationSeconds, departure: departure, arrival: arrival),
                 hasTransfers: false,
-                timeSlot: Self.makeTimeSlot(from: departure),
+                timeSlot: Self.makeTimeSlot(raw: segment.departure, date: departure),
                 logoURL: URL(string: carrier?.logo ?? String()),
                 email: carrier?.email ?? "—",
                 phone: carrier?.phone ?? "—"
@@ -58,50 +64,126 @@ actor CarriersListDataProvider: CarriersListDataProviderProtocol {
 }
 
 private extension CarriersListDataProvider {
-    static func parseDate(_ value: String?) -> Date? {
+    static func parseDateFlexible(_ value: String?) -> Date? {
         guard let value else {
             return nil
         }
 
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        if let date = formatter.date(from: value) {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = isoFormatter.date(from: value) {
             return date
         }
 
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter.date(from: value)
-    }
-
-    static func formatDate(_ date: Date?) -> String {
-        guard let date else {
-            return "—"
+        isoFormatter.formatOptions = [.withInternetDateTime]
+        if let date = isoFormatter.date(from: value) {
+            return date
         }
 
+        let formats = [
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd'T'HH:mm:ss",
+            "yyyy-MM-dd'T'HH:mm",
+            "yyyy-MM-dd HH:mm",
+            "yyyy-MM-dd'T'HH:mm:ssXXXXX",
+            "yyyy-MM-dd'T'HH:mm:ssZ",
+            "yyyy-MM-dd HH:mm:ss Z"
+        ]
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone.current
+        for format in formats {
+            formatter.dateFormat = format
+            if let date = formatter.date(from: value) {
+                return date
+            }
+        }
+
+        return nil
+    }
+
+    static func formatDate(from raw: String?, fallbackDate: Date?, defaultLabel: String) -> String {
+        if let date = fallbackDate {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "ru_RU")
+            formatter.dateFormat = "d MMMM"
+            return formatter.string(from: date)
+        }
+
+        guard let raw else {
+            return defaultLabel
+        }
+        
+        let datePart: String
+        if let match = raw.range(of: #"(\d{4})-(\d{2})-(\d{2})"#, options: .regularExpression) {
+            datePart = String(raw[match])
+        } else {
+            return defaultLabel
+        }
+
+        let parser = DateFormatter()
+        parser.locale = Locale(identifier: "en_US_POSIX")
+        parser.dateFormat = "yyyy-MM-dd"
+        guard let date = parser.date(from: datePart) else {
+            return defaultLabel
+        }
+
+        let output = DateFormatter()
+        output.locale = Locale(identifier: "ru_RU")
+        output.dateFormat = "d MMMM"
+        return output.string(from: date)
+    }
+
+    static func todayDateLabel() -> String {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.dateFormat = "d MMMM"
-        return formatter.string(from: date)
+        return formatter.string(from: Date())
     }
 
-    static func formatTime(_ date: Date?) -> String {
-        guard let date else {
+    static func formatTime(from raw: String?, fallbackDate: Date?) -> String {
+        if let date = fallbackDate {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "ru_RU")
+            formatter.dateFormat = "HH:mm"
+            return formatter.string(from: date)
+        }
+
+        guard let raw else {
             return "—"
         }
 
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "HH:mm"
-        return formatter.string(from: date)
+        let candidate: Substring?
+        if let tPart = raw.split(separator: "T", maxSplits: 1).last, raw.contains("T") {
+            candidate = tPart
+        } else {
+            candidate = raw.split(separator: " ", maxSplits: 1).last
+        }
+
+        guard let candidate else {
+            return "—"
+        }
+
+        let timePart = candidate.prefix(5)
+        return timePart.count == 5 ? String(timePart) : "—"
     }
 
-    static func formatDuration(departure: Date?, arrival: Date?) -> String {
+    static func formatDuration(seconds: Int, departure: Date?, arrival: Date?) -> String {
+        if seconds > 0 {
+            return durationLabel(seconds: seconds)
+        }
+
         guard let departure, let arrival else {
             return "—"
         }
 
-        let interval = max(0, arrival.timeIntervalSince(departure))
-        let totalMinutes = Int(interval / 60)
+        let interval = max(0, Int(arrival.timeIntervalSince(departure)))
+        return durationLabel(seconds: interval)
+    }
+
+    static func durationLabel(seconds: Int) -> String {
+        let totalMinutes = seconds / 60
         let hours = totalMinutes / 60
         let minutes = totalMinutes % 60
 
@@ -112,12 +194,24 @@ private extension CarriersListDataProvider {
         return "\(minutes) мин"
     }
 
-    static func makeTimeSlot(from date: Date?) -> TimeSlot {
-        guard let date else {
-            return .morning
+    static func makeTimeSlot(raw: String?, date: Date?) -> TimeSlot {
+        if let date {
+            let hour = Calendar.current.component(.hour, from: date)
+            return slot(hour: hour)
         }
 
-        let hour = Calendar.current.component(.hour, from: date)
+        if let raw {
+            let time = formatTime(from: raw, fallbackDate: nil)
+            let hourString = String(time.prefix(2))
+            if let hour = Int(hourString) {
+                return slot(hour: hour)
+            }
+        }
+
+        return .morning
+    }
+
+    static func slot(hour: Int) -> TimeSlot {
         switch hour {
         case 6..<12:
             return .morning

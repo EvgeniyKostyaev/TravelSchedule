@@ -90,7 +90,7 @@ struct CarrierCellView: View {
                 AsyncImage(url: logoURL) { image in
                     image
                         .resizable()
-                        .scaledToFill()
+                        .scaledToFit()
                 } placeholder: {
                     ProgressView()
                 }

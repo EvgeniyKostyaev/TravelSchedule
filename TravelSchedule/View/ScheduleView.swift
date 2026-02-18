@@ -147,7 +147,13 @@ struct ScheduleView: View {
         .padding(Layout.screenPadding)
         .fullScreenCover(isPresented: $isCitiesPresenting) {
             CityStationSelectionFlowView { city, station in
-                let value = "\(city) (\(station.title))"
+                let stationTitle = station.title.trimmingCharacters(in: .whitespacesAndNewlines)
+                let value: String
+                if stationTitle.localizedCaseInsensitiveContains(city) {
+                    value = stationTitle
+                } else {
+                    value = "\(city) (\(stationTitle))"
+                }
                 switch activeField {
                 case .from:
                     fromText = value
