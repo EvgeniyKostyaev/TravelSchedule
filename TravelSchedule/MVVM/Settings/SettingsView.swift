@@ -20,12 +20,15 @@ private enum Layout {
 }
 
 struct SettingsView: View {
-    @StateObject var viewModel: SettingsViewModel
+    @ObservedObject private var viewModel: SettingsViewModel
     @State private var isAgreementPresented: Bool = false
+    
+    init(viewModel: SettingsViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         Group {
-            
             if (viewModel.isLoading && viewModel.copyrightText.isEmpty) {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
