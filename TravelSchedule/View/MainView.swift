@@ -124,7 +124,12 @@ struct MainView: View {
                 let service = NetworkClientFactory.shared.makeCarrierService()
                 
                 print("Fetching...")
-                let carrier = try await service.getCarrierInfo(code: "TK", system: "iata", lang: "ru_RU", format: "json")
+                let carrier = try await service.getCarrierInfo(
+                    code: "TK",
+                    system: "iata",
+                    lang: "ru_RU",
+                    format: "json"
+                )
                 
                 print("Successfully fetched: \(carrier)")
             } catch {

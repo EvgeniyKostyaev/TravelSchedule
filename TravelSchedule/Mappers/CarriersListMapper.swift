@@ -43,9 +43,10 @@ struct CarriersListMapper: Sendable {
                 timeSlot: formatter.makeTimeSlot(raw: segment.departure, date: departure),
                 logoURL: URL(string: carrier?.logo ?? String()),
                 email: carrier?.email ?? "—",
-                phone: carrier?.phone ?? "—"
+                phone: carrier?.phone ?? "—",
+                carrierCode: carrier?.code.map { String($0) },
+                carrierCodeSystem: nil
             )
         }
     }
 }
-

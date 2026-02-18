@@ -21,6 +21,8 @@ struct CarrierOption: Identifiable, Hashable, Sendable {
     let logoURL: URL?
     let email: String
     let phone: String
+    let carrierCode: String?
+    let carrierCodeSystem: String?
 
     init(
         id: UUID = UUID(),
@@ -35,7 +37,9 @@ struct CarrierOption: Identifiable, Hashable, Sendable {
         timeSlot: TimeSlot,
         logoURL: URL?,
         email: String,
-        phone: String
+        phone: String,
+        carrierCode: String? = nil,
+        carrierCodeSystem: String? = nil
     ) {
         self.id = id
         self.carrierName = carrierName
@@ -50,6 +54,8 @@ struct CarrierOption: Identifiable, Hashable, Sendable {
         self.logoURL = logoURL
         self.email = email
         self.phone = phone
+        self.carrierCode = carrierCode
+        self.carrierCodeSystem = carrierCodeSystem
     }
 }
 
