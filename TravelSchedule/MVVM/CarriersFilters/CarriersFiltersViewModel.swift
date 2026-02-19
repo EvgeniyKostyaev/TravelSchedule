@@ -1,5 +1,5 @@
 //
-//  FiltersViewModel.swift
+//  CarriersFiltersViewModel.swift
 //  TravelSchedule
 //
 //  Created by Evgeniy Kostyaev on 19.02.2026.
@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-final class FiltersViewModel: ObservableObject {
+final class CarriersFiltersViewModel: ObservableObject {
     @Published private(set) var filters: CarrierFiltersState
 
     init(filters: CarrierFiltersState) {

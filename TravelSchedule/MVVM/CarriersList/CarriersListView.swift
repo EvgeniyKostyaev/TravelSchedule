@@ -83,7 +83,7 @@ struct CarriersListView: View {
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .filters:
-                    FiltersView(filters: viewModel.filters) { filters in
+                    CarriersFiltersView(filters: viewModel.filters) { filters in
                         viewModel.onUpdateFilters(filters)
                         path.removeLast()
                     }

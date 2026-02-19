@@ -22,13 +22,13 @@ private enum Layout {
     static let buttonLabelSpacing: CGFloat = 6
 }
 
-struct FiltersView: View {
-    @StateObject private var viewModel: FiltersViewModel
+struct CarriersFiltersView: View {
+    @StateObject private var viewModel: CarriersFiltersViewModel
 
     private let onApply: (CarrierFiltersState) -> Void
     
     init(filters: CarrierFiltersState, onApply: @escaping (CarrierFiltersState) -> Void) {
-        _viewModel = StateObject(wrappedValue: FiltersViewModel(filters: filters))
+        _viewModel = StateObject(wrappedValue: CarriersFiltersViewModel(filters: filters))
         self.onApply = onApply
     }
     
@@ -115,6 +115,6 @@ struct FiltersView: View {
 
 #Preview {
     NavigationStack {
-        FiltersView(filters: .init()) { _ in }
+        CarriersFiltersView(filters: .init()) { _ in }
     }
 }
