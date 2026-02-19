@@ -41,16 +41,6 @@ final class ScheduleViewModel: ObservableObject {
         activeField = nil
     }
     
-    func onTapSwapButton() {
-        let temp = fromText
-        fromText = toText
-        toText = temp
-
-        let tempCode = fromCode
-        fromCode = toCode
-        toCode = tempCode
-    }
-    
     func onShowCarriersView() {
         isCarriersPresented = true
     }
@@ -63,5 +53,15 @@ final class ScheduleViewModel: ObservableObject {
     func onUpdateToData(toText: String, toCode: String) {
         self.toText = toText
         self.toCode = toCode
+    }
+    
+    func onSwapFromToData() {
+        let temp = fromText
+        fromText = toText
+        toText = temp
+
+        let tempCode = fromCode
+        fromCode = toCode
+        toCode = tempCode
     }
 }

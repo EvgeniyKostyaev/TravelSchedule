@@ -82,7 +82,7 @@ struct ScheduleView: View {
                 )
                 
                 Button {
-                    viewModel.onTapSwapButton()
+                    viewModel.onSwapFromToData()
                 } label: {
                     Image(.swapButton)
                         .font(.system(size: Layout.swapIconSize, weight: .semibold))
