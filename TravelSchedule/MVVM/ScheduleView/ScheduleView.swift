@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum ActiveField {
+enum ActiveState {
     case from
     case to
 }
@@ -51,7 +51,7 @@ struct ScheduleView: View {
             HStack(spacing: Layout.cardSpacing) {
                 VStack(alignment: .leading, spacing: Layout.textFieldStackSpacing) {
                     Button {
-                        viewModel.onShowCities(activeField: .from)
+                        viewModel.onShowCities(activeState: .from)
                     } label: {
                         Text(viewModel.fromText.isEmpty ? "Откуда" : viewModel.fromText)
                             .foregroundStyle(viewModel.fromText.isEmpty ? Color.customGray : .customBlack)
@@ -62,7 +62,7 @@ struct ScheduleView: View {
                     .frame(height: Layout.textFieldRowHeight)
                     
                     Button {
-                        viewModel.onShowCities(activeField: .to)
+                        viewModel.onShowCities(activeState: .to)
                     } label: {
                         Text(viewModel.toText.isEmpty ? "Куда" : viewModel.toText)
                             .foregroundStyle(viewModel.toText.isEmpty ? Color.customGray : .customBlack)
@@ -124,7 +124,10 @@ struct ScheduleView: View {
             Spacer()
         }
         .padding(Layout.screenPadding)
-        .fullScreenCover(isPresented: $viewModel.isCitiesPresenting) {
+        .fullScreenCover(isPresented: Binding(get: { viewModel.isCitiesPresenting },
+                                              set: { isCitiesPresenting in
+            viewModel.onUpdateCitiesPresenting(isCitiesPresenting: isCitiesPresenting)
+        }) ) {
             CityStationSelectionFlowView { city, station in
                 viewModel.onSelectData(city: city, station: station)
                 withAnimation(.easeInOut(duration: Layout.dismissAnimationDuration)) {
@@ -132,7 +135,10 @@ struct ScheduleView: View {
                 }
             }
         }
-        .fullScreenCover(isPresented: $viewModel.isCarriersPresented) {
+        .fullScreenCover(isPresented: Binding(get: {viewModel.isCarriersPresented},
+                                              set: { isCarriersPresented in
+            viewModel.onUpdateCarriersPresented(isCarriersPresented: isCarriersPresented)
+        }) ) {
             CarriersListView(
                 fromText: viewModel.fromText,
                 toText: viewModel.toText,
@@ -140,10 +146,14 @@ struct ScheduleView: View {
                 toCode: viewModel.toCode
             )
         }
-        .fullScreenCover(isPresented: $viewModel.isStoriesPresented) {
+        .fullScreenCover(isPresented: Binding(get: { viewModel.isStoriesPresented }, set: { isStoriesPresented in
+            viewModel.onUpdateStoriesPresented(isStoriesPresented: isStoriesPresented)
+        }) ) {
             StoriesScreenView(
                 stories: viewModel.stories,
-                viewedStoryIDs: $viewModel.viewedStoryIDs,
+                viewedStoryIDs: Binding(get: { viewModel.viewedStoryIDs }, set: { viewedStoryIDs in
+                    viewModel.onUpdateViewedStoryIDs(viewedStoryIDs: viewedStoryIDs)
+                }),
                 initialStoryIndex: viewModel.selectedStoryIndex
             ) {
                 viewModel.onHideStories()

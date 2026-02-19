@@ -11,16 +11,15 @@ import Foundation
 final class ScheduleViewModel: ObservableObject {
     let stories: [Story] = Story.items
     
-    @Published var isCitiesPresenting: Bool = false
-    @Published var isCarriersPresented: Bool = false
-    @Published var isStoriesPresented: Bool = false
-    @Published var viewedStoryIDs: Set<Int> = []
-    
+    @Published private(set) var isCitiesPresenting: Bool = false
+    @Published private(set) var isCarriersPresented: Bool = false
+    @Published private(set) var isStoriesPresented: Bool = false
+    @Published private(set) var viewedStoryIDs: Set<Int> = []
     @Published private(set) var fromText: String = String()
     @Published private(set) var toText: String = String()
     @Published private(set) var fromCode: String = String()
     @Published private(set) var toCode: String = String()
-    @Published private(set) var activeField: ActiveField?
+    @Published private(set) var activeState: ActiveState?
     @Published private(set) var selectedStoryIndex: Int = 0
     
     func onShowStories(index: Int) {
@@ -32,14 +31,14 @@ final class ScheduleViewModel: ObservableObject {
         isStoriesPresented = false
     }
     
-    func onShowCities(activeField: ActiveField) {
-        self.activeField = activeField
+    func onShowCities(activeState: ActiveState) {
+        self.activeState = activeState
         isCitiesPresenting = true
     }
     
     func onHideCities() {
         isCitiesPresenting = false
-        activeField = nil
+        activeState = nil
     }
     
     func onShowCarriers() {
@@ -64,7 +63,7 @@ final class ScheduleViewModel: ObservableObject {
         } else {
             value = "\(city) (\(stationTitle))"
         }
-        switch activeField {
+        switch activeState {
         case .from:
             fromText = value
             fromCode = station.code
@@ -74,5 +73,21 @@ final class ScheduleViewModel: ObservableObject {
         case .none:
             break
         }
+    }
+    
+    func onUpdateCitiesPresenting(isCitiesPresenting: Bool) {
+        self.isCitiesPresenting = isCitiesPresenting
+    }
+    
+    func onUpdateCarriersPresented(isCarriersPresented: Bool) {
+        self.isCarriersPresented = isCarriersPresented
+    }
+    
+    func onUpdateStoriesPresented(isStoriesPresented: Bool) {
+        self.isStoriesPresented = isStoriesPresented
+    }
+    
+    func onUpdateViewedStoryIDs(viewedStoryIDs: Set<Int>) {
+        self.viewedStoryIDs = viewedStoryIDs
     }
 }

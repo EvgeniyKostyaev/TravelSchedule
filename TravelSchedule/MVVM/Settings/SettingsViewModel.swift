@@ -14,20 +14,22 @@ final class SettingsViewModel: ObservableObject {
         case load
         case toggleDarkTheme(Bool)
     }
-
+    
     private enum Constants {
         static let darkThemeKey: String = "isDarkThemeEnabled"
     }
-
+    
+    @Published var isAgreementPresented: Bool = false
+    
     @Published private(set) var isDarkThemeEnabled: Bool = false
     @Published private(set) var copyrightText: String = String()
     @Published private(set) var isLoading: Bool = false
-
+    
     private let userDefaults: UserDefaults
     private let dataProvider: SettingsDataProviderProtocol
     private let actions = PassthroughSubject<Action, Never>()
     private var cancellables = Set<AnyCancellable>()
-
+    
     init(userDefaults: UserDefaults = .standard,
          dataProvider: SettingsDataProviderProtocol = SettingsDataProvider.shared) {
         self.userDefaults = userDefaults
@@ -35,15 +37,15 @@ final class SettingsViewModel: ObservableObject {
         bindActions()
         send(.load)
     }
-
+    
     func send(_ action: Action) {
         actions.send(action)
     }
-
+    
     func loadThemePreference() {
         isDarkThemeEnabled = userDefaults.bool(forKey: Constants.darkThemeKey)
     }
-
+    
     func saveThemePreference() {
         userDefaults.set(isDarkThemeEnabled, forKey: Constants.darkThemeKey)
     }
@@ -52,9 +54,9 @@ final class SettingsViewModel: ObservableObject {
         guard copyrightText.isEmpty else {
             return
         }
-
+        
         isLoading = true
-
+        
         do {
             let payload = try await dataProvider.fetchSettingsPayload()
             copyrightText = payload.text
@@ -62,10 +64,14 @@ final class SettingsViewModel: ObservableObject {
             print(error.networkErrorKind)
             copyrightText = String()
         }
-
+        
         isLoading = false
     }
-
+    
+    func showUserAgreement() {
+        isAgreementPresented = true
+    }
+    
     private func bindActions() {
         actions
             .sink { [weak self] action in
@@ -73,7 +79,7 @@ final class SettingsViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-
+    
     private func handle(_ action: Action) {
         switch action {
         case .load:

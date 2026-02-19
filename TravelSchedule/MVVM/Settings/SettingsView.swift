@@ -21,7 +21,6 @@ private enum Layout {
 
 struct SettingsView: View {
     @ObservedObject private var viewModel: SettingsViewModel
-    @State private var isAgreementPresented: Bool = false
     
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
@@ -51,7 +50,7 @@ struct SettingsView: View {
                     .padding(.horizontal, Layout.horizontalPadding)
 
                     Button {
-                        isAgreementPresented = true
+                        viewModel.showUserAgreement()
                     } label: {
                         HStack {
                             Text("Пользовательское соглашение")
@@ -83,7 +82,7 @@ struct SettingsView: View {
                 }
                 .padding(.top, Layout.topPadding)
                 .fullScreenCover(
-                    isPresented: $isAgreementPresented
+                    isPresented: $viewModel.isAgreementPresented
                 ) {
                     NavigationStack {
                         UserAgreementView()
