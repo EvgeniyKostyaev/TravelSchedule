@@ -34,27 +34,16 @@ private enum Layout {
 }
 
 struct ScheduleView: View {
-    private let stories: [Story] = Story.items
-    
-    @State private var fromText: String = String()
-    @State private var toText: String = String()
-    @State private var fromCode: String = String()
-    @State private var toCode: String = String()
-    @State private var activeField: ActiveField?
-    @State private var isCitiesPresenting: Bool = false
-    @State private var isCarriersPresented: Bool = false
-    @State private var viewedStoryIDs: Set<Int> = []
-    @State private var selectedStoryIndex: Int = 0
-    @State private var isStoriesPresented: Bool = false
+    @StateObject private var viewModel: ScheduleViewModel = ScheduleViewModel()
     
     var body: some View {
         VStack(alignment: .leading, spacing: Layout.headerSpacing) {
             StoriesStripView(
-                stories: stories,
-                viewedStoryIDs: viewedStoryIDs
+                stories: viewModel.stories,
+                viewedStoryIDs: viewModel.viewedStoryIDs
             ) { index in
-                selectedStoryIndex = index
-                isStoriesPresented = true
+                viewModel.selectedStoryIndex = index
+                viewModel.isStoriesPresented = true
             }
             .frame(height: Layout.storiesHeight)
             .padding(.trailing, -Layout.screenPadding)
@@ -63,11 +52,11 @@ struct ScheduleView: View {
             HStack(spacing: Layout.cardSpacing) {
                 VStack(alignment: .leading, spacing: Layout.textFieldStackSpacing) {
                     Button {
-                        activeField = .from
-                        isCitiesPresenting = true
+                        viewModel.activeField = .from
+                        viewModel.isCitiesPresenting = true
                     } label: {
-                        Text(fromText.isEmpty ? "Откуда" : fromText)
-                            .foregroundStyle(fromText.isEmpty ? Color.customGray : .customBlack)
+                        Text(viewModel.fromText.isEmpty ? "Откуда" : viewModel.fromText)
+                            .foregroundStyle(viewModel.fromText.isEmpty ? Color.customGray : .customBlack)
                             .colorScheme(.light)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .lineLimit(Layout.textLineLimit)
@@ -75,11 +64,11 @@ struct ScheduleView: View {
                     .frame(height: Layout.textFieldRowHeight)
                     
                     Button {
-                        activeField = .to
-                        isCitiesPresenting = true
+                        viewModel.activeField = .to
+                        viewModel.isCitiesPresenting = true
                     } label: {
-                        Text(toText.isEmpty ? "Куда" : toText)
-                            .foregroundStyle(toText.isEmpty ? Color.customGray : .customBlack)
+                        Text(viewModel.toText.isEmpty ? "Куда" : viewModel.toText)
+                            .foregroundStyle(viewModel.toText.isEmpty ? Color.customGray : .customBlack)
                             .colorScheme(.light)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .lineLimit(Layout.textLineLimit)
@@ -96,13 +85,13 @@ struct ScheduleView: View {
                 )
                 
                 Button {
-                    let temp = fromText
-                    fromText = toText
-                    toText = temp
+                    let temp = viewModel.fromText
+                    viewModel.fromText = viewModel.toText
+                    viewModel.toText = temp
 
-                    let tempCode = fromCode
-                    fromCode = toCode
-                    toCode = tempCode
+                    let tempCode = viewModel.fromCode
+                    viewModel.fromCode = viewModel.toCode
+                    viewModel.toCode = tempCode
                 } label: {
                     Image(.swapButton)
                         .font(.system(size: Layout.swapIconSize, weight: .semibold))
@@ -119,12 +108,12 @@ struct ScheduleView: View {
                 RoundedRectangle(cornerRadius: Layout.cardCornerRadius, style: .continuous)
             )
             
-            if !fromCode.isEmpty && !toCode.isEmpty {
+            if !viewModel.fromCode.isEmpty && !viewModel.toCode.isEmpty {
                 HStack {
                     Spacer()
                     
                     Button {
-                        isCarriersPresented = true
+                        viewModel.isCarriersPresented = true
                     } label: {
                         Text("Найти")
                             .foregroundStyle(.customWhite)
@@ -145,7 +134,7 @@ struct ScheduleView: View {
             Spacer()
         }
         .padding(Layout.screenPadding)
-        .fullScreenCover(isPresented: $isCitiesPresenting) {
+        .fullScreenCover(isPresented: $viewModel.isCitiesPresenting) {
             CityStationSelectionFlowView { city, station in
                 let stationTitle = station.title.trimmingCharacters(in: .whitespacesAndNewlines)
                 let value: String
@@ -154,37 +143,37 @@ struct ScheduleView: View {
                 } else {
                     value = "\(city) (\(stationTitle))"
                 }
-                switch activeField {
+                switch viewModel.activeField {
                 case .from:
-                    fromText = value
-                    fromCode = station.code
+                    viewModel.fromText = value
+                    viewModel.fromCode = station.code
                 case .to:
-                    toText = value
-                    toCode = station.code
+                    viewModel.toText = value
+                    viewModel.toCode = station.code
                 case .none:
                     break
                 }
-                activeField = nil
+                viewModel.activeField = nil
                 withAnimation(.easeInOut(duration: Layout.dismissAnimationDuration)) {
-                    isCitiesPresenting = false
+                    viewModel.isCitiesPresenting = false
                 }
             }
         }
-        .fullScreenCover(isPresented: $isCarriersPresented) {
+        .fullScreenCover(isPresented: $viewModel.isCarriersPresented) {
             CarriersListView(
-                fromText: fromText,
-                toText: toText,
-                fromCode: fromCode,
-                toCode: toCode
+                fromText: viewModel.fromText,
+                toText: viewModel.toText,
+                fromCode: viewModel.fromCode,
+                toCode: viewModel.toCode
             )
         }
-        .fullScreenCover(isPresented: $isStoriesPresented) {
+        .fullScreenCover(isPresented: $viewModel.isStoriesPresented) {
             StoriesScreenView(
-                stories: stories,
-                viewedStoryIDs: $viewedStoryIDs,
-                initialStoryIndex: selectedStoryIndex
+                stories: viewModel.stories,
+                viewedStoryIDs: $viewModel.viewedStoryIDs,
+                initialStoryIndex: viewModel.selectedStoryIndex
             ) {
-                isStoriesPresented = false
+                viewModel.isStoriesPresented = false
             }
         }
     }
