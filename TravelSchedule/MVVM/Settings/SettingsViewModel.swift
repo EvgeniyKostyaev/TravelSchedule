@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 private enum Constants {
     static let darkThemeKey: String = "isDarkThemeEnabled"
@@ -21,7 +20,6 @@ final class SettingsViewModel: ObservableObject {
     
     private let userDefaults: UserDefaults
     private let dataProvider: SettingsDataProviderProtocol
-    private var cancellables = Set<AnyCancellable>()
     
     init(userDefaults: UserDefaults = .standard,
          dataProvider: SettingsDataProviderProtocol = SettingsDataProvider.shared) {
@@ -41,7 +39,7 @@ final class SettingsViewModel: ObservableObject {
         isAgreementPresented = true
     }
     
-    func onUpdateАgreementPresented(isAgreementPresented: Bool) {
+    func onUpdateAgreementPresented(isAgreementPresented: Bool) {
         self.isAgreementPresented = isAgreementPresented
     }
     

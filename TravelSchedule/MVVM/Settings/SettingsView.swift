@@ -84,7 +84,7 @@ struct SettingsView: View {
                 .fullScreenCover(
                     isPresented: Binding(get: { viewModel.isAgreementPresented },
                                          set: { isAgreementPresented in
-                                             viewModel.onUpdateАgreementPresented(isAgreementPresented: isAgreementPresented)
+                                             viewModel.onUpdateAgreementPresented(isAgreementPresented: isAgreementPresented)
                                          })
                 ) {
                     NavigationStack {
