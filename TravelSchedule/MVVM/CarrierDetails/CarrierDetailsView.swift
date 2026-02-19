@@ -93,7 +93,6 @@ struct CarrierDetailsView: View {
         CarrierDetailsView(
             option: CarrierOption(
                 carrierName: "ОАО «РЖД»",
-                routeTitle: "",
                 routeNote: "",
                 dateLabel: "14 января",
                 departureTime: "22:30",

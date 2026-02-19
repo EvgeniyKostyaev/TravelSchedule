@@ -10,9 +10,7 @@ import Foundation
 protocol CarriersListDataProviderProtocol: Sendable {
     func fetchCarrierOptions(
         fromCode: String,
-        toCode: String,
-        fromText: String,
-        toText: String
+        toCode: String
     ) async throws -> [CarrierOption]
 }
 
@@ -32,12 +30,9 @@ actor CarriersListDataProvider: CarriersListDataProviderProtocol {
 
     func fetchCarrierOptions(
         fromCode: String,
-        toCode: String,
-        fromText: String,
-        toText: String
+        toCode: String
     ) async throws -> [CarrierOption] {
         let schedules = try await searchService.getScheduleBetweenStations(from: fromCode, to: toCode)
-        let routeTitle = "\(fromText) → \(toText)"
-        return mapper.map(segments: schedules.segments ?? [], routeTitle: routeTitle)
+        return mapper.map(segments: schedules.segments ?? [])
     }
 }

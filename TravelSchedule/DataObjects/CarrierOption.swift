@@ -10,7 +10,6 @@ import Foundation
 struct CarrierOption: Identifiable, Hashable, Sendable {
     let id: UUID
     let carrierName: String
-    let routeTitle: String
     let routeNote: String
     let dateLabel: String
     let departureTime: String
@@ -27,7 +26,6 @@ struct CarrierOption: Identifiable, Hashable, Sendable {
     init(
         id: UUID = UUID(),
         carrierName: String,
-        routeTitle: String,
         routeNote: String,
         dateLabel: String,
         departureTime: String,
@@ -43,7 +41,6 @@ struct CarrierOption: Identifiable, Hashable, Sendable {
     ) {
         self.id = id
         self.carrierName = carrierName
-        self.routeTitle = routeTitle
         self.routeNote = routeNote
         self.dateLabel = dateLabel
         self.departureTime = departureTime

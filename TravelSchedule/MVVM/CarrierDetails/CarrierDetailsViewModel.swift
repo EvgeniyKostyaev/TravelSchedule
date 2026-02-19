@@ -39,7 +39,6 @@ final class CarrierDetailsViewModel: ObservableObject {
             option = CarrierOption(
                 id: option.id,
                 carrierName: details.name.isEmpty ? option.carrierName : details.name,
-                routeTitle: option.routeTitle,
                 routeNote: option.routeNote,
                 dateLabel: option.dateLabel,
                 departureTime: option.departureTime,

@@ -68,9 +68,7 @@ final class CarriersListViewModel: ObservableObject {
         do {
             options = try await dataProvider.fetchCarrierOptions(
                 fromCode: fromCode,
-                toCode: toCode,
-                fromText: fromText,
-                toText: toText
+                toCode: toCode
             )
         } catch {
             errorKind = error.networkErrorKind

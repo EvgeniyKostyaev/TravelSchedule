@@ -14,7 +14,7 @@ struct CarriersListMapper: Sendable {
         self.formatter = formatter
     }
 
-    func map(segments: [Components.Schemas.Segment], routeTitle: String) -> [CarrierOption] {
+    func map(segments: [Components.Schemas.Segment]) -> [CarrierOption] {
         let requestDateLabel = formatter.todayDateLabel()
 
         return segments.map { segment in
@@ -25,7 +25,6 @@ struct CarriersListMapper: Sendable {
 
             return CarrierOption(
                 carrierName: carrier?.title ?? "Перевозчик",
-                routeTitle: routeTitle,
                 routeNote: String(),
                 dateLabel: formatter.formatDate(
                     from: segment.departure,
