@@ -10,16 +10,58 @@ import Foundation
 final class ScheduleViewModel: ObservableObject {
     let stories: [Story] = Story.items
     
-    @Published var fromText: String = String()
-    @Published var toText: String = String()
-    @Published var fromCode: String = String()
-    @Published var toCode: String = String()
-    @Published var activeField: ActiveField?
     @Published var isCitiesPresenting: Bool = false
     @Published var isCarriersPresented: Bool = false
-    @Published var viewedStoryIDs: Set<Int> = []
-    @Published var selectedStoryIndex: Int = 0
     @Published var isStoriesPresented: Bool = false
+    @Published var viewedStoryIDs: Set<Int> = []
     
+    @Published private(set) var fromText: String = String()
+    @Published private(set) var toText: String = String()
+    @Published private(set) var fromCode: String = String()
+    @Published private(set) var toCode: String = String()
+    @Published private(set) var activeField: ActiveField?
+    @Published private(set) var selectedStoryIndex: Int = 0
     
+    func onShowStoriesView(selectedStoryIndex: Int) {
+        self.selectedStoryIndex = selectedStoryIndex
+        self.isStoriesPresented = true
+    }
+    
+    func onHideStoriesView() {
+        isStoriesPresented = false
+    }
+    
+    func onShowCities(activeField: ActiveField) {
+        self.activeField = activeField
+        isCitiesPresenting = true
+    }
+    
+    func onHideCitiesView() {
+        isCitiesPresenting = false
+        activeField = nil
+    }
+    
+    func onTapSwapButton() {
+        let temp = fromText
+        fromText = toText
+        toText = temp
+
+        let tempCode = fromCode
+        fromCode = toCode
+        toCode = tempCode
+    }
+    
+    func onShowCarriersView() {
+        isCarriersPresented = true
+    }
+
+    func onUpdateFromData(fromText: String, fromCode: String) {
+        self.fromText = fromText
+        self.fromCode = fromCode
+    }
+    
+    func onUpdateToData(toText: String, toCode: String) {
+        self.toText = toText
+        self.toCode = toCode
+    }
 }

@@ -42,8 +42,7 @@ struct ScheduleView: View {
                 stories: viewModel.stories,
                 viewedStoryIDs: viewModel.viewedStoryIDs
             ) { index in
-                viewModel.selectedStoryIndex = index
-                viewModel.isStoriesPresented = true
+                viewModel.onShowStoriesView(selectedStoryIndex: index)
             }
             .frame(height: Layout.storiesHeight)
             .padding(.trailing, -Layout.screenPadding)
@@ -52,8 +51,7 @@ struct ScheduleView: View {
             HStack(spacing: Layout.cardSpacing) {
                 VStack(alignment: .leading, spacing: Layout.textFieldStackSpacing) {
                     Button {
-                        viewModel.activeField = .from
-                        viewModel.isCitiesPresenting = true
+                        viewModel.onShowCities(activeField: .from)
                     } label: {
                         Text(viewModel.fromText.isEmpty ? "Откуда" : viewModel.fromText)
                             .foregroundStyle(viewModel.fromText.isEmpty ? Color.customGray : .customBlack)
@@ -64,8 +62,7 @@ struct ScheduleView: View {
                     .frame(height: Layout.textFieldRowHeight)
                     
                     Button {
-                        viewModel.activeField = .to
-                        viewModel.isCitiesPresenting = true
+                        viewModel.onShowCities(activeField: .to)
                     } label: {
                         Text(viewModel.toText.isEmpty ? "Куда" : viewModel.toText)
                             .foregroundStyle(viewModel.toText.isEmpty ? Color.customGray : .customBlack)
@@ -85,13 +82,7 @@ struct ScheduleView: View {
                 )
                 
                 Button {
-                    let temp = viewModel.fromText
-                    viewModel.fromText = viewModel.toText
-                    viewModel.toText = temp
-
-                    let tempCode = viewModel.fromCode
-                    viewModel.fromCode = viewModel.toCode
-                    viewModel.toCode = tempCode
+                    viewModel.onTapSwapButton()
                 } label: {
                     Image(.swapButton)
                         .font(.system(size: Layout.swapIconSize, weight: .semibold))
@@ -111,9 +102,8 @@ struct ScheduleView: View {
             if !viewModel.fromCode.isEmpty && !viewModel.toCode.isEmpty {
                 HStack {
                     Spacer()
-                    
                     Button {
-                        viewModel.isCarriersPresented = true
+                        viewModel.onShowCarriersView()
                     } label: {
                         Text("Найти")
                             .foregroundStyle(.customWhite)
@@ -145,17 +135,14 @@ struct ScheduleView: View {
                 }
                 switch viewModel.activeField {
                 case .from:
-                    viewModel.fromText = value
-                    viewModel.fromCode = station.code
+                    viewModel.onUpdateFromData(fromText: value, fromCode: station.code)
                 case .to:
-                    viewModel.toText = value
-                    viewModel.toCode = station.code
+                    viewModel.onUpdateToData(toText: value, toCode: station.code)
                 case .none:
                     break
                 }
-                viewModel.activeField = nil
                 withAnimation(.easeInOut(duration: Layout.dismissAnimationDuration)) {
-                    viewModel.isCitiesPresenting = false
+                    viewModel.onHideCitiesView()
                 }
             }
         }
@@ -173,7 +160,7 @@ struct ScheduleView: View {
                 viewedStoryIDs: $viewModel.viewedStoryIDs,
                 initialStoryIndex: viewModel.selectedStoryIndex
             ) {
-                viewModel.isStoriesPresented = false
+                viewModel.onHideStoriesView()
             }
         }
     }
