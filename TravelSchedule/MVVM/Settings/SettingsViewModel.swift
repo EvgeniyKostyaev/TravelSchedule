@@ -8,17 +8,12 @@
 import Foundation
 import Combine
 
+private enum Constants {
+    static let darkThemeKey: String = "isDarkThemeEnabled"
+}
+
 @MainActor
 final class SettingsViewModel: ObservableObject {
-    enum Action {
-        case load
-        case toggleDarkTheme(Bool)
-    }
-    
-    private enum Constants {
-        static let darkThemeKey: String = "isDarkThemeEnabled"
-    }
-    
     @Published private(set) var isAgreementPresented: Bool = false
     @Published private(set) var isDarkThemeEnabled: Bool = false
     @Published private(set) var copyrightText: String = String()
@@ -26,27 +21,28 @@ final class SettingsViewModel: ObservableObject {
     
     private let userDefaults: UserDefaults
     private let dataProvider: SettingsDataProviderProtocol
-    private let actions = PassthroughSubject<Action, Never>()
     private var cancellables = Set<AnyCancellable>()
     
     init(userDefaults: UserDefaults = .standard,
          dataProvider: SettingsDataProviderProtocol = SettingsDataProvider.shared) {
         self.userDefaults = userDefaults
         self.dataProvider = dataProvider
-        bindActions()
-        send(.load)
+        
+        loadThemePreference()
     }
     
-    func send(_ action: Action) {
-        actions.send(action)
+    func onUpdateDarkThemeEnabled(isDarkThemeEnabled: Bool) {
+        self.isDarkThemeEnabled = isDarkThemeEnabled
+        
+        saveThemePreference()
     }
     
-    func loadThemePreference() {
-        isDarkThemeEnabled = userDefaults.bool(forKey: Constants.darkThemeKey)
+    func showUserAgreement() {
+        isAgreementPresented = true
     }
     
-    func saveThemePreference() {
-        userDefaults.set(isDarkThemeEnabled, forKey: Constants.darkThemeKey)
+    func onUpdateАgreementPresented(isAgreementPresented: Bool) {
+        self.isAgreementPresented = isAgreementPresented
     }
     
     func load() async {
@@ -67,29 +63,12 @@ final class SettingsViewModel: ObservableObject {
         isLoading = false
     }
     
-    func showUserAgreement() {
-        isAgreementPresented = true
+    // MARK: - Private methods
+    private func loadThemePreference() {
+        isDarkThemeEnabled = userDefaults.bool(forKey: Constants.darkThemeKey)
     }
     
-    func onUpdateАgreementPresented(isAgreementPresented: Bool) {
-        self.isAgreementPresented = isAgreementPresented
-    }
-    
-    private func bindActions() {
-        actions
-            .sink { [weak self] action in
-                self?.handle(action)
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func handle(_ action: Action) {
-        switch action {
-        case .load:
-            loadThemePreference()
-        case .toggleDarkTheme(let isEnabled):
-            isDarkThemeEnabled = isEnabled
-            saveThemePreference()
-        }
+    private func saveThemePreference() {
+        userDefaults.set(isDarkThemeEnabled, forKey: Constants.darkThemeKey)
     }
 }

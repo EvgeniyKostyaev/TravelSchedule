@@ -36,8 +36,8 @@ struct SettingsView: View {
                     Toggle(
                         isOn: Binding(
                             get: { viewModel.isDarkThemeEnabled },
-                            set: { newValue in
-                                viewModel.send(.toggleDarkTheme(newValue))
+                            set: { isDarkThemeEnabled in
+                                viewModel.onUpdateDarkThemeEnabled(isDarkThemeEnabled: isDarkThemeEnabled)
                             }
                         )
                     ) {
