@@ -25,7 +25,7 @@ struct SettingsView: View {
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
     }
-
+    
     var body: some View {
         Group {
             if (viewModel.isLoading && viewModel.copyrightText.isEmpty) {
@@ -48,7 +48,7 @@ struct SettingsView: View {
                     .tint(Color.customBlue)
                     .frame(height: Layout.rowHeight)
                     .padding(.horizontal, Layout.horizontalPadding)
-
+                    
                     Button {
                         viewModel.showUserAgreement()
                     } label: {
@@ -67,9 +67,9 @@ struct SettingsView: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-
+                    
                     Spacer()
-
+                    
                     VStack(spacing: Layout.footerSpacing) {
                         Text(!viewModel.copyrightText.isEmpty ? viewModel.copyrightText : "Приложение использует API «Яндекс.Расписания»")
                             .font(.system(size: Layout.footerFontSize, weight: .regular))
@@ -82,7 +82,10 @@ struct SettingsView: View {
                 }
                 .padding(.top, Layout.topPadding)
                 .fullScreenCover(
-                    isPresented: $viewModel.isAgreementPresented
+                    isPresented: Binding(get: { viewModel.isAgreementPresented },
+                                         set: { isAgreementPresented in
+                                             viewModel.onUpdateАgreementPresented(isAgreementPresented: isAgreementPresented)
+                                         })
                 ) {
                     NavigationStack {
                         UserAgreementView()

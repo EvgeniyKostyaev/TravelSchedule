@@ -19,8 +19,7 @@ final class SettingsViewModel: ObservableObject {
         static let darkThemeKey: String = "isDarkThemeEnabled"
     }
     
-    @Published var isAgreementPresented: Bool = false
-    
+    @Published private(set) var isAgreementPresented: Bool = false
     @Published private(set) var isDarkThemeEnabled: Bool = false
     @Published private(set) var copyrightText: String = String()
     @Published private(set) var isLoading: Bool = false
@@ -70,6 +69,10 @@ final class SettingsViewModel: ObservableObject {
     
     func showUserAgreement() {
         isAgreementPresented = true
+    }
+    
+    func onUpdateАgreementPresented(isAgreementPresented: Bool) {
+        self.isAgreementPresented = isAgreementPresented
     }
     
     private func bindActions() {
