@@ -23,12 +23,12 @@ private enum Layout {
 }
 
 struct FiltersView: View {
-    @Binding var filters: CarrierFiltersState
+    @StateObject private var viewModel: FiltersViewModel
 
-    private let onApply: () -> Void
+    private let onApply: (CarrierFiltersState) -> Void
     
-    init(filters: Binding<CarrierFiltersState>, onApply: @escaping () -> Void) {
-        self._filters = filters
+    init(filters: CarrierFiltersState, onApply: @escaping (CarrierFiltersState) -> Void) {
+        _viewModel = StateObject(wrappedValue: FiltersViewModel(filters: filters))
         self.onApply = onApply
     }
     
@@ -43,14 +43,14 @@ struct FiltersView: View {
             VStack(spacing: Layout.rowSpacing) {
                 ForEach(TimeSlot.allCases) { slot in
                     Button {
-                        toggle(slot)
+                        viewModel.onToggleSlot(slot)
                     } label: {
                         HStack {
                             Text(slot.rawValue)
                                 .font(.system(size: Layout.subtitleFontSize, weight: .regular))
                                 .foregroundStyle(Color.customBlack)
                             Spacer()
-                            Image(systemName: filters.selectedSlots.contains(slot) ? "checkmark.square.fill" : "square")
+                            Image(systemName: viewModel.filters.selectedSlots.contains(slot) ? "checkmark.square.fill" : "square")
                                 .font(.system(size: Layout.checkboxSize))
                                 .foregroundStyle(Color.customBlack)
                         }
@@ -76,7 +76,7 @@ struct FiltersView: View {
             Spacer()
             
             Button {
-                onApply()
+                onApply(viewModel.currentFilters())
             } label: {
                 HStack(spacing: Layout.buttonLabelSpacing) {
                     Text("Применить")
@@ -94,28 +94,16 @@ struct FiltersView: View {
         .customNavigationBackButton()
     }
     
-    private func toggle(_ slot: TimeSlot) {
-        if filters.selectedSlots.contains(slot) {
-            filters.selectedSlots.remove(slot)
-        } else {
-            filters.selectedSlots.insert(slot)
-        }
-    }
-    
     private func radioRow(title: String, value: TransfersFilter) -> some View {
         Button {
-            if filters.transfers == value {
-                filters.transfers = nil
-            } else {
-                filters.transfers = value
-            }
+            viewModel.onToggleTransfers(value)
         } label: {
             HStack {
                 Text(title)
                     .font(.system(size: Layout.subtitleFontSize, weight: .regular))
                     .foregroundStyle(Color.customBlack)
                 Spacer()
-                Image(systemName: filters.transfers == value ? "largecircle.fill.circle" : "circle")
+                Image(systemName: viewModel.filters.transfers == value ? "largecircle.fill.circle" : "circle")
                     .font(.system(size: Layout.radioSize))
                     .foregroundStyle(Color.customBlack)
             }
@@ -127,6 +115,6 @@ struct FiltersView: View {
 
 #Preview {
     NavigationStack {
-        FiltersView(filters: .constant(.init())) { }
+        FiltersView(filters: .init()) { _ in }
     }
 }

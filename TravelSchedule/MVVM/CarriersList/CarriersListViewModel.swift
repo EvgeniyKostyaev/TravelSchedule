@@ -10,7 +10,7 @@ import Foundation
 @MainActor
 final class CarriersListViewModel: ObservableObject {
     @Published private(set) var options: [CarrierOption] = []
-    @Published var filters: CarrierFiltersState = CarrierFiltersState()
+    @Published private(set) var filters: CarrierFiltersState = CarrierFiltersState()
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var errorKind: NetworkErrorKind?
 
@@ -75,5 +75,9 @@ final class CarriersListViewModel: ObservableObject {
         }
 
         isLoading = false
+    }
+
+    func onUpdateFilters(_ filters: CarrierFiltersState) {
+        self.filters = filters
     }
 }

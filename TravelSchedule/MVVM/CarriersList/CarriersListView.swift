@@ -83,7 +83,8 @@ struct CarriersListView: View {
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .filters:
-                    FiltersView(filters: $viewModel.filters) {
+                    FiltersView(filters: viewModel.filters) { filters in
+                        viewModel.onUpdateFilters(filters)
                         path.removeLast()
                     }
                 case .carrierDetails(let option):
