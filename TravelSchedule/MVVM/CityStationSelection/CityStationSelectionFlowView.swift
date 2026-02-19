@@ -19,9 +19,9 @@ struct CityStationSelectionFlowView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var path = NavigationPath()
     
-    private let onSelectStation: (String, String) -> Void
+    private let onSelectStation: (String, StationSelectionOption) -> Void
     
-    init(onSelectStation: @escaping (String, String) -> Void) {
+    init(onSelectStation: @escaping (String, StationSelectionOption) -> Void) {
         self.onSelectStation = onSelectStation
     }
     

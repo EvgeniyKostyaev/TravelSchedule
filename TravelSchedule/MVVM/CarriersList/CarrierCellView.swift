@@ -90,7 +90,7 @@ struct CarrierCellView: View {
                 AsyncImage(url: logoURL) { image in
                     image
                         .resizable()
-                        .scaledToFill()
+                        .scaledToFit()
                 } placeholder: {
                     ProgressView()
                 }
@@ -113,7 +113,6 @@ struct CarrierCellView: View {
 #Preview {
     CarrierCellView(option: CarrierOption(
         carrierName: "РЖД",
-        routeTitle: "Москва (Ярославский вокзал) → Санкт Петербург (Балтийский вокзал)",
         routeNote: "С пересадкой в Костроме",
         dateLabel: "14 января",
         departureTime: "22:30",

@@ -7,28 +7,28 @@
 
 import SwiftUI
 
-private enum Layout {
-    static let agreementURLString: String = "https://yandex.ru/legal/practicum_offer"
-}
-
 struct UserAgreementView: View {
-    @State private var isLoading: Bool = true
-    
-    private var agreementURL: URL? {
-        URL(string: Layout.agreementURLString)
-    }
+    @StateObject private var viewModel: UserAgreementViewModel = UserAgreementViewModel()
     
     var body: some View {
         ZStack {
             Group {
-                if let url = agreementURL {
-                    WebView(url: url, isLoading: $isLoading)
+                if let url = viewModel.agreementURL {
+                    WebView(
+                        url: url,
+                        isLoading: Binding(
+                            get: { viewModel.isLoading },
+                            set: { isLoading in
+                                viewModel.onUpdateLoading(isLoading)
+                            }
+                        )
+                    )
                 } else {
                     ErrorStateView(errorState: .serverError)
                 }
             }
             
-            if agreementURL != nil && isLoading {
+            if viewModel.agreementURL != nil && viewModel.isLoading {
                 ProgressView()
             }
         }

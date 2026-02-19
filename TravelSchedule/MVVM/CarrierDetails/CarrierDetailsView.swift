@@ -18,18 +18,22 @@ private enum Layout {
 }
 
 struct CarrierDetailsView: View {
-    let option: CarrierOption
+    @StateObject private var viewModel: CarrierDetailsViewModel
+
+    init(option: CarrierOption) {
+        _viewModel = StateObject(wrappedValue: CarrierDetailsViewModel(option: option))
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack {
                 RoundedRectangle(cornerRadius: Layout.logoCornerRadius, style: .continuous)
                     .fill(Color.customWhite)
-                if let logoURL = option.logoURL {
+                if let logoURL = viewModel.option.logoURL {
                     AsyncImage(url: logoURL) { image in
                         image
                             .resizable()
-                            .scaledToFill()
+                            .scaledToFit()
                     } placeholder: {
                         ProgressView()
                     }
@@ -46,7 +50,7 @@ struct CarrierDetailsView: View {
             .padding(.top)
             
             VStack(alignment: .leading, spacing: Layout.rowSpacing) {
-                Text(option.carrierName)
+                Text(viewModel.option.carrierName)
                     .font(.system(size: Layout.titleFontSize, weight: .bold))
                     .foregroundStyle(Color.customBlack)
                 
@@ -55,7 +59,7 @@ struct CarrierDetailsView: View {
                         .font(.system(size: Layout.labelFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlack)
                     
-                    Text(option.email)
+                    Text(viewModel.option.email)
                         .font(.system(size: Layout.valueFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlue)
                 }
@@ -65,7 +69,7 @@ struct CarrierDetailsView: View {
                         .font(.system(size: Layout.labelFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlack)
                     
-                    Text(option.phone)
+                    Text(viewModel.option.phone)
                         .font(.system(size: Layout.valueFontSize, weight: .regular))
                         .foregroundStyle(Color.customBlue)
                 }
@@ -78,6 +82,9 @@ struct CarrierDetailsView: View {
         .padding(.horizontal)
         .navigationTitle("Информация о перевозчике")
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await viewModel.load()
+        }
     }
 }
 
@@ -86,7 +93,6 @@ struct CarrierDetailsView: View {
         CarrierDetailsView(
             option: CarrierOption(
                 carrierName: "ОАО «РЖД»",
-                routeTitle: "",
                 routeNote: "",
                 dateLabel: "14 января",
                 departureTime: "22:30",
