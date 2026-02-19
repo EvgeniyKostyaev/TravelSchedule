@@ -42,7 +42,7 @@ struct ScheduleView: View {
                 stories: viewModel.stories,
                 viewedStoryIDs: viewModel.viewedStoryIDs
             ) { index in
-                viewModel.onShowStoriesView(selectedStoryIndex: index)
+                viewModel.onShowStories(index: index)
             }
             .frame(height: Layout.storiesHeight)
             .padding(.trailing, -Layout.screenPadding)
@@ -82,7 +82,7 @@ struct ScheduleView: View {
                 )
                 
                 Button {
-                    viewModel.onSwapFromToData()
+                    viewModel.onSwapData()
                 } label: {
                     Image(.swapButton)
                         .font(.system(size: Layout.swapIconSize, weight: .semibold))
@@ -103,7 +103,7 @@ struct ScheduleView: View {
                 HStack {
                     Spacer()
                     Button {
-                        viewModel.onShowCarriersView()
+                        viewModel.onShowCarriers()
                     } label: {
                         Text("Найти")
                             .foregroundStyle(.customWhite)
@@ -126,23 +126,9 @@ struct ScheduleView: View {
         .padding(Layout.screenPadding)
         .fullScreenCover(isPresented: $viewModel.isCitiesPresenting) {
             CityStationSelectionFlowView { city, station in
-                let stationTitle = station.title.trimmingCharacters(in: .whitespacesAndNewlines)
-                let value: String
-                if stationTitle.localizedCaseInsensitiveContains(city) {
-                    value = stationTitle
-                } else {
-                    value = "\(city) (\(stationTitle))"
-                }
-                switch viewModel.activeField {
-                case .from:
-                    viewModel.onUpdateFromData(fromText: value, fromCode: station.code)
-                case .to:
-                    viewModel.onUpdateToData(toText: value, toCode: station.code)
-                case .none:
-                    break
-                }
+                viewModel.onSelectData(city: city, station: station)
                 withAnimation(.easeInOut(duration: Layout.dismissAnimationDuration)) {
-                    viewModel.onHideCitiesView()
+                    viewModel.onHideCities()
                 }
             }
         }
@@ -160,7 +146,7 @@ struct ScheduleView: View {
                 viewedStoryIDs: $viewModel.viewedStoryIDs,
                 initialStoryIndex: viewModel.selectedStoryIndex
             ) {
-                viewModel.onHideStoriesView()
+                viewModel.onHideStories()
             }
         }
     }

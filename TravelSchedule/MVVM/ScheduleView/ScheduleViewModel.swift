@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 final class ScheduleViewModel: ObservableObject {
     let stories: [Story] = Story.items
     
@@ -22,12 +23,12 @@ final class ScheduleViewModel: ObservableObject {
     @Published private(set) var activeField: ActiveField?
     @Published private(set) var selectedStoryIndex: Int = 0
     
-    func onShowStoriesView(selectedStoryIndex: Int) {
-        self.selectedStoryIndex = selectedStoryIndex
+    func onShowStories(index: Int) {
+        self.selectedStoryIndex = index
         self.isStoriesPresented = true
     }
     
-    func onHideStoriesView() {
+    func onHideStories() {
         isStoriesPresented = false
     }
     
@@ -36,26 +37,16 @@ final class ScheduleViewModel: ObservableObject {
         isCitiesPresenting = true
     }
     
-    func onHideCitiesView() {
+    func onHideCities() {
         isCitiesPresenting = false
         activeField = nil
     }
     
-    func onShowCarriersView() {
+    func onShowCarriers() {
         isCarriersPresented = true
     }
-
-    func onUpdateFromData(fromText: String, fromCode: String) {
-        self.fromText = fromText
-        self.fromCode = fromCode
-    }
     
-    func onUpdateToData(toText: String, toCode: String) {
-        self.toText = toText
-        self.toCode = toCode
-    }
-    
-    func onSwapFromToData() {
+    func onSwapData() {
         let temp = fromText
         fromText = toText
         toText = temp
@@ -63,5 +54,25 @@ final class ScheduleViewModel: ObservableObject {
         let tempCode = fromCode
         fromCode = toCode
         toCode = tempCode
+    }
+    
+    func onSelectData(city: String, station: StationSelectionOption) {
+        let stationTitle = station.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let value: String
+        if stationTitle.localizedCaseInsensitiveContains(city) {
+            value = stationTitle
+        } else {
+            value = "\(city) (\(stationTitle))"
+        }
+        switch activeField {
+        case .from:
+            fromText = value
+            fromCode = station.code
+        case .to:
+            toText = value
+            toCode = station.code
+        case .none:
+            break
+        }
     }
 }
