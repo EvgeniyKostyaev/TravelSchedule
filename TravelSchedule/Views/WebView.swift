@@ -20,7 +20,8 @@ struct WebView: UIViewRepresentable {
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
-        guard webView.url != url else {
+        // Avoid reloading on redirects/navigation updates; load only once.
+        guard webView.url == nil else {
             return
         }
         let request = URLRequest(url: url)
